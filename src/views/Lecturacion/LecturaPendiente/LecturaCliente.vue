@@ -282,7 +282,7 @@
             </b-modal>
         <!-- FIN - MODAL ANORMALIDADES -->
         
-         <!-- <div>
+        <!-- <div>
             <h1>Mis Coordenadas</h1>
 
             <p> Latitud: {{ coor.lat }} </p>

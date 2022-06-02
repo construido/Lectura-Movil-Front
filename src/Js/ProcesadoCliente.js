@@ -9,8 +9,8 @@ export default {
             arrayCliente: [],
             arrayAnormalidades: [],
             coor: {
-                lat: 0,
-                lng: 0
+                lat: 20,
+                lng: 20
             },
 
             lecturados: '',
@@ -262,9 +262,11 @@ export default {
             for (let index = 0; index < indice; index++){
                 formData.append('imageEnviar[]', this.imageEnviar[index]);
             }
-
+            
             formData.append('tnCliente', this.cli);
             formData.append('tnMedia', this.media);
+            formData.append('Latitud', this.coor.lat);
+            formData.append('Longitud', this.coor.lng);
             formData.append('tnMedidor', this.medidor);
             formData.append('tnPlomero', this.Plomero);
             formData.append('tnCategoria', this.categoria);

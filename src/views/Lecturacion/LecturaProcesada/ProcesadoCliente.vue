@@ -285,16 +285,12 @@
         </b-modal>
         <!-- FIN - MODAL ANORMALIDADES -->
         
-        <!-- {{X}} - {{Y}} -->
-        
          <!-- <div>
             <h1>Mis Coordenadas</h1>
 
             <p> Latitud: {{ coor.lat }} </p>
             <p> Longitud: {{ coor.lng }} </p>
         </div> -->
-
-        <!-- {{prueba2}} -->
 
         <footer class="bg-light fixed-bottom">
             <!-- Copyright -->
