@@ -11,10 +11,6 @@ const routes = [
     path: '/',
     name: 'Login',
     component: Login,
-    // beforeEnter: (to, from, next) => { 
-    //   delete localStorage.token;
-    //   next();
-    // } 
   },
   {
     path: '/dashboard/about',
@@ -118,7 +114,7 @@ const routes = [
   {
     path: '/anormalidades',
     name: 'Anormalidades',
-    component: () => import(/* webpackChunkName: "enviarerrores" */ '../views/Anormalidades.vue'),
+    component: () => import(/* webpackChunkName: "anormalidades" */ '../views/Anormalidades.vue'),
   },
 ]
 
@@ -128,21 +124,14 @@ const router = new VueRouter({
   routes
 })
 
-// function existToken() {
-//   return localStorage.token;
-// }
+function existToken() {
+  if(localStorage.getItem('token')) return 1; //localStorage.getItem('token');
+  else return 0;
+}
 
-// router.beforeEach((to, from, next) => {
-//   if (to.path != '/login' && existToken()) {
-//       next();
-//   } else {
-//       next('Login');
-//   }
-// });
-
-// router.beforeEach((to, from, next) => {
-//   if (to.name !== 'Login' && localStorage.token) next({ name: 'Login' })
-//   else next()
-// })
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Login' && !existToken()) next({ name: 'Login' })
+  else next()
+})
 
 export default router

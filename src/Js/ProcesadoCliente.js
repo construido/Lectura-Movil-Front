@@ -9,8 +9,8 @@ export default {
             arrayCliente: [],
             arrayAnormalidades: [],
             coor: {
-                lat: 20,
-                lng: 20
+                lat: 0,
+                lng: 0
             },
 
             lecturados: '',
@@ -101,7 +101,7 @@ export default {
         this.cli = this.$route.params.Cliente;
         this.lecturasPendientesLecturados(this.id, this.nombreAlias);
         this.obtenerCliente(this.id, this.cli, this.nombreAlias);
-        // this.obtenerUbicacion();
+        this.obtenerUbicacion();
         this.listarAnormalidad(1);
     },
 
@@ -313,9 +313,9 @@ export default {
                     this.coor.lng = coordenadas.longitude;
                 }, 
                 () => { 
-                    // alert("No pude obtener tu ubicación. Intenta más tarde.") 
+                    alert("No pude obtener tu ubicación. Intenta más tarde.")
                 },
-                // { enableHighAccuracy: true, }
+                { enableHighAccuracy: true, }
                 );
             }else alert("Lo siento, tu navegador no tiene soporte para obtener tu ubicación")
         },

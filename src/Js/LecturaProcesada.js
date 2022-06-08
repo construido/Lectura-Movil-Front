@@ -1,6 +1,6 @@
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
-import { each } from 'jquery';
+// import {SessionExpirada} from './SessionExpirada'
 
 export default {
     name: 'LecturaProcesada',
@@ -88,6 +88,7 @@ export default {
             this.show = true;
             this.axios.post('/admin/listarPlanillaDeLecturasProcesadas?page='+page+'&DataBaseAlias='+this.DataBaseAlias+'&Plomero='+this.Plomero)
                 .then(res => {
+                    console.log(res.data);
                     console.log(res.data.values.laGeneracionFactura.data);
                     console.log(res.data.values.pagination);
                     this.pagination = res.data.values.pagination;
@@ -96,7 +97,12 @@ export default {
                 })
                 .catch(e => {
                     this.arrayFacturas = [];
-                    console.log(e.response);
+                    this.show = false;
+                    console.log(e);
+                    // if(e.response.status == 403){ // TODO
+                    //     SessionExpirada(e.response.status);
+                    //     this.$router.push('/');
+                    // }
                 })
         },
         listarClientes(id){

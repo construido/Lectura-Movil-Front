@@ -9,8 +9,8 @@ export default {
             arrayCliente: [],
             arrayAnormalidades: [],
             coor: {
-                lat: 10,
-                lng: 10
+                lat: 0,
+                lng: 0
             },
 
             lecturados: '',
@@ -314,7 +314,7 @@ export default {
                     this.coor.lng = coordenadas.longitude;
                 }, 
                 () => { 
-                    // alert("No pude obtener tu ubicación. Intenta más tarde.")
+                    alert("No pude obtener tu ubicación. Intenta más tarde.")
                 },
                 { enableHighAccuracy: true, }
                 );

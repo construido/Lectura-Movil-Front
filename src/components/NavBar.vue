@@ -126,6 +126,8 @@
 </template>
 
 <script>
+// import {SessionExpirada} from './../Js/SessionExpirada'
+
 export default {
     name: 'NavBar',
 
@@ -216,6 +218,10 @@ export default {
                 this.$router.push('/');
             }).catch(e => {
                 console.log(e.response);
+                // if(e.response.status == 403){ // TODO
+                //     SessionExpirada(e.response.status);
+                //     this.$router.push('/');
+                // }
             })
         },
         controlErrores(error){
@@ -225,19 +231,6 @@ export default {
             if (error.response.status == 422) {
                 array = error.response.data.errors
             }
-            // else{
-            //     if (error.response.status == 401){
-            //         this.mensajeHeader = 'Credenciales inválidos';
-            //         this.mensajeBody = 'Intente nuevamente';
-            //         this.$bvModal.show('modal-scoped');
-            //     }else{
-            //         if (error.response.status == 403) {
-            //             this.mensajeHeader = 'Cuenta suspendida';
-            //             this.mensajeBody = 'Contactar al Administrador';
-            //             this.$bvModal.show('modal-scoped');
-            //         }
-            //     }
-            // }
             return array;
         },
     },

@@ -41,9 +41,9 @@
                                         </td>
 
                                         <th hidden scope="row" class="text-center"> {{ index + 1 }} </th>
-                                        <td style="white-space:nowrap" v-if="item.Zona < 9 && item.Ruta < 9" align="right"> 0{{ item.Zona }}0{{ item.Ruta }} </td>
-                                        <td style="white-space:nowrap" v-else-if="item.Zona < 9" align="right"> 0{{ item.Zona }}{{ item.Ruta }} </td>
-                                        <td style="white-space:nowrap" v-else-if="item.Ruta < 9" align="right"> {{ item.Zona }}0{{ item.Ruta }} </td>
+                                        <td style="white-space:nowrap" v-if="item.Zona < 10 && item.Ruta < 10" align="right"> 0{{ item.Zona }}0{{ item.Ruta }} </td>
+                                        <td style="white-space:nowrap" v-else-if="item.Zona < 10" align="right"> 0{{ item.Zona }}{{ item.Ruta }} </td>
+                                        <td style="white-space:nowrap" v-else-if="item.Ruta < 10" align="right"> {{ item.Zona }}0{{ item.Ruta }} </td>
                                         <td style="white-space:nowrap" v-else align="right"> {{ item.Zona }}{{ item.Ruta }} </td>
                                         <td style="white-space:nowrap" align="right"> {{ item.Cobro}} </td>
                                         <td style="white-space:nowrap" align="right"> {{ item.FechaGeneracionLectura }} </td>
