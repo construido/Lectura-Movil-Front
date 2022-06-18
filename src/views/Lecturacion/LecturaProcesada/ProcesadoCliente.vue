@@ -189,6 +189,30 @@
         </b-modal>
         <!-- FIN - MODAL GUARDADO EXITOSO -->
 
+        <!-- INICIO - MODAL SIN CLIENTE A LECTURAR -->
+        <b-modal centered id="modal-sin-cliente">
+            <template #modal-header="{ close }">
+                <b-button hidden variant="outline-success" @click="close()">
+                    Cerrar
+                </b-button>
+
+                <h5 class="text-success"> <b-icon icon="check-square" scale="2" variant="success mx-2"></b-icon> Satisfactorio..! </h5>
+            </template>
+
+            <h5 class="text-black"> Planilla terminada..! </h5>
+
+            <template #modal-footer="{ cancel }">
+                <b-button block variant="outline-success" @click="$router.go(-2)">
+                    Aceptar
+                </b-button>
+
+                <b-button hidden variant="outline-success" @click="cancel()">
+                    Cancelar
+                </b-button>
+            </template>
+        </b-modal>
+        <!-- FIN - MODAL SIN CLIENTE A LECTURAR -->
+
         <!-- INICIO - MODAL ANORMALIDADES -->
         <b-modal centered id="modal-anormalidad">
             <template hidden #modal-header="{ close }">

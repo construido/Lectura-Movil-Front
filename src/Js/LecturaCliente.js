@@ -374,9 +374,7 @@ export default {
                     console.log(res);
 
                     if (res.data.values.length == 0){
-                        // this.lecturasPendientesLecturados(this.id, this.nombreAlias); // TODO : se le quitó, hacer seguimiento
-                        // this.$bvModal.show('modal-seguir');
-                        // this.$router.go(-2); // TODO : hacer seguimiento
+                        this.$bvModal.show('modal-sin-cliente');
                     }else{
                         this.arrayCliente = res.data.values;
                         this.cargarValoresNext();

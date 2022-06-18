@@ -368,7 +368,7 @@ export default {
                 .then(res => {
                     console.log(res);
                     if (res.data.values.length == 0) {
-                        // this.$router.go(-1); // TODO : hacer seguimiento
+                        this.$bvModal.show('modal-sin-cliente');
                     }else{
                         this.arrayCliente = res.data.values;
                         this.cargarValoresNext();
