@@ -2,7 +2,7 @@
     <div id="app">
         <NavBar></NavBar>
         
-        <div class="container my-1" style="overflow: auto;">
+        <div class="container my-2" style="overflow: auto;">
             <div class="card">
                 <div class="card-header">
                     <div class="col-xl-6">

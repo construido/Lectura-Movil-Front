@@ -3,8 +3,6 @@
 
         <div class="text-center">
           <img class="img-fluid" src="../../public/imagenes/lm-4.png">
-          <!-- <b-icon v-if="!onLine" icon="wifi-off" aria-hidden="true" scale="2"></b-icon>
-          <b-icon v-else icon="wifi" aria-hidden="true" scale="2"></b-icon> -->
         </div>
 
         <div class="card">
@@ -34,9 +32,7 @@
                     </div>
                     <br>
                     <div class="d-grid gap-2">
-                        <b-button @click="Login()" :variant="color">INGRESAR
-                          <!-- <b-icon v-if="!onLine" icon="wifi-off" aria-hidden="true"></b-icon>
-                          <b-icon v-else icon="wifi" aria-hidden="true"></b-icon> -->
+                        <b-button @click="Login()" variant="success">INGRESAR
                         </b-button>
                         <b-button @click="$router.go(0)" variant="primary"> ACTUALIZAR </b-button>
                         <a href="https://api.whatsapp.com/send?phone=59168921251"> Contáctenos </a>
@@ -67,8 +63,6 @@
 </template>
 
 <script>
-  import moment from 'moment';
-
   export default {
     data() {
       return {
@@ -76,8 +70,6 @@
         login: '',
         password:'',
         camposObligatorios: [],
-        onLine: true,
-        color: 'success',
 
         // Alert
         show: false,
@@ -93,80 +85,60 @@
       }
     },
     methods:{
-      fullScreen() {
-        if(navigator.onLine) {
-            // el navegador está conectado a la red
-            // alert('el navegador está conectado a la red');
-            this.onLine = true;
-            this.color = 'success';
-        } else {
-            // el navegador NO está conectado a la red
-            // alert('el navegador NO está conectado a la red');
-            this.onLine = false;
-            this.color = 'danger';
-        }
-      },
       controlErrores(error){
-
           var array = [];
 
           if (error.response.status == 422) {
               array = error.response.data.errors
           }else{
-            if (error.response.status == 401){
-                this.mensajeHeader = 'Credenciales inválidos';
-                this.mensajeBody = 'Intente nuevamente';
-                this.$bvModal.show('modal-scoped');
-            }else{
-              if (error.response.status == 403) {
-                this.mensajeHeader = 'Cuenta suspendida';
-                this.mensajeBody = 'Contactar al Administrador';
-                this.$bvModal.show('modal-scoped');
+              if (error.response.status == 401){
+                  this.mensajeHeader = 'Credenciales inválidos';
+                  this.mensajeBody = 'Intente nuevamente';
+                  this.$bvModal.show('modal-scoped');
+              }else{
+                if (error.response.status == 403) {
+                  this.mensajeHeader = 'Cuenta suspendida';
+                  this.mensajeBody = 'Contactar al Administrador';
+                  this.$bvModal.show('modal-scoped');
+                }
               }
-            }
           }
           return array;
       },
+
       Login(){
-        this.show = true;
-        this.axios.post('/login', {
-            'Login'    : this.login,
-            'password' : this.password
-        }).then(res => {
-            this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token.token;
-            localStorage.setItem('token', res.data.token.token);
-            localStorage.setItem('NombreUsuario', res.data.data.Nombre);
-            localStorage.setItem('ApellidoUsuario', res.data.data.Apellidos);
-            localStorage.setItem('EmpresaNombre', res.data.data.EmpresaNombre);
-            localStorage.setItem('DataBaseAlias', res.data.data.DataBaseAlias);
-            localStorage.setItem('Plomero', res.data.data.Plomero);
-            localStorage.setItem('Empresa', res.data.data.Empresa);
-            this.show = false;
-            this.$router.push('/menu');
+          this.show = true;
+          this.axios.post('/login', {
+              'Login'    : this.login,
+              'password' : this.password
+          }).then(res => {
+              this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token.token;
+              localStorage.setItem('token', res.data.token.token);
+              localStorage.setItem('NombreUsuario', res.data.data.Nombre);
+              localStorage.setItem('ApellidoUsuario', res.data.data.Apellidos);
+              localStorage.setItem('EmpresaNombre', res.data.data.EmpresaNombre);
+              localStorage.setItem('DataBaseAlias', res.data.data.DataBaseAlias);
+              localStorage.setItem('Plomero', res.data.data.Plomero);
+              this.show = false;
+              this.$router.push('/menu');
 
-        }).catch(e => {
-            console.log(e.response);
-            this.camposObligatorios = this.controlErrores(e);
-            this.show = false;
-        })
+          }).catch(e => {
+              console.log(e.response);
+              this.camposObligatorios = this.controlErrores(e);
+              this.show = false;
+          })
       },
-      fechaActual(){
-          this.fecha = moment().format("DD/MM/YYYY");
-      },
+
       showPassword() {
-        if(this.type == 'password') {
-            this.type = 'text'
-            this.texto = 'Ocultar Contraseña'
-        } else {
-            this.type = 'password'
-            this.texto = 'Mostrar Contraseña'
-        }
+          if(this.type == 'password') {
+              this.type = 'text'
+              this.texto = 'Ocultar Contraseña'
+          } else {
+              this.type = 'password'
+              this.texto = 'Mostrar Contraseña'
+          }
       },
-    },
 
-    created(){
-        this.fechaActual();
-        // this.fullScreen();
-    },
+    }
   }
 </script>

@@ -58,7 +58,7 @@
             </b-navbar>
         </div>
         <!-- NavBar - FIN -->
-        
+
         <div class="container my-2">
             <div class="card">
                 <div class="card-header text-center sticky-header">
@@ -66,8 +66,7 @@
                     <h6> <b> ZonaRuta: {{ zona }}{{ ruta }} </b> </h6>
                 </div>
                 <b-overlay :show="show" class="d-inline-block">
-                    <div class="card-body">
-                        
+                    <div class="card-body" v-if="arrayLecturas.length > 0">
                         <div class="table-responsive">
                             <table class="table table-striped table-borderless table-sm caption-top">
                                 <!-- <caption> <b> Clientes Pendientes </b> </caption> -->
@@ -152,8 +151,12 @@
                             </ul>
                         </nav>
                         <!-- FIN DE LA PAGINACION -->
-
                     </div>
+
+                    <div class="card-body text-center" v-else>
+                        <b>Cliente {{buscar}} no existe..!</b>
+                    </div>
+
                 </b-overlay>
             </div>
         </div><br><br><br>

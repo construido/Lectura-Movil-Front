@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { Store } from 'vuex'
-import store from '../store'
+// import { Store } from 'vuex'
+// import store from '../store'
 import Login from '../views/Login.vue'
+import moment from 'moment';
 
 Vue.use(VueRouter)
 
@@ -125,9 +126,27 @@ const router = new VueRouter({
 })
 
 function existToken() {
-  if(localStorage.getItem('token')) return 1; //localStorage.getItem('token');
-  else return 0;
-}
+  //   if(localStorage.getItem('token')) return 1; //localStorage.getItem('token');
+  //   else return 0;
+  try {
+    if (localStorage.getItem('token')){
+
+      var token     = localStorage.getItem('token')
+      var base64Url = token.split('.')[1];
+      var base64    = base64Url.replace('-', '+').replace('_', '/');
+      var payload   = JSON.parse(window.atob(base64))
+      var Fecha_Expiracion = moment(payload.exp * 1000)
+      var Fecha_Actual     = new Date();
+
+      if(Fecha_Expiracion._d > Fecha_Actual) return 1; // TODO: Token válido
+      else return 0; // TODO: Token expirado
+
+    }else return 0; // TODO: No existe Token
+    
+  } catch (error) {
+    return 0; // TODO: Error de Token
+  }
+};
 
 router.beforeEach((to, from, next) => {
   if (to.name !== 'Login' && !existToken()) next({ name: 'Login' })

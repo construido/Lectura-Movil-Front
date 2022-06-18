@@ -102,19 +102,21 @@ export default {
             this.show = true;
             this.axios.post('/admin/listarProcesadas?page='+page+'&tcGeneracionFactura='+this.id+'&dato='+this.buscar+'&tipo='+this.tipo+'&DataBaseAlias='+this.DataBaseAlias)
                 .then(res => {
-
-                    console.log(res.data.values.generacionLectura.data);
-                    console.log(res.data.values.pagination);
-                    this.pagination = res.data.values.pagination;
+                    console.log(res.data);
                     this.arrayLecturas = res.data.values.generacionLectura.data;
+                    this.pagination    = res.data.values.pagination;
 
-                    this.zona = this.arrayLecturas[0].Zona;
-                    this.ruta = this.arrayLecturas[0].Ruta;
+                    if (res.data.values.generacionLectura.data.length > 0) {
+                        this.zona = this.arrayLecturas[0].Zona;
+                        this.ruta = this.arrayLecturas[0].Ruta;
+                    }
+
                     this.show = false;
                 })
                 .catch(e => {
-                    // this.arrayLecturas = [];
+                    this.arrayLecturas = [];
                     console.log(e.response);
+                    this.show = false;
                 })
         },
         limpiar(){

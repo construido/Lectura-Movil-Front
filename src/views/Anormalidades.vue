@@ -56,9 +56,9 @@
             <div class="card my-2">
                 <div class="card-header text-center">
                     <h5> Anormalidad de Medidor 
-                        <b-button class="mx-2" @click="$router.go(0)" variant="info"> 
+                        <!-- <b-button class="mx-2" @click="limpiar()" variant="info">
                             <b-icon icon="arrow-clockwise" :animation="animation" aria-hidden="true"></b-icon>
-                        </b-button> 
+                        </b-button> -->
                     </h5>
                 </div>
                 <b-overlay :show="show" class="d-inline-block">

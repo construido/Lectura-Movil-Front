@@ -60,15 +60,13 @@
         <!-- NavBar - FIN -->
         
         <div class="container my-2">
-
             <div class="card">
                 <div class="card-header text-center sticky-header">
                     <h5> <b> Lecturas Pendientes [{{lecturados}}/{{pendientes}}] </b> </h5>
                     <h6> <b> ZonaRuta: {{ zona }}{{ ruta }} </b> </h6>
                 </div>
                 <b-overlay :show="show" class="d-inline-block">
-                    <div class="card-body">
-                        
+                    <div class="card-body" v-if="arrayLecturas.length > 0">
                         <div class="table-responsive">
                             <table class="table table-striped table-borderless table-sm caption-top">
                                 <!-- <caption> <b> Clientes Pendientes </b> </caption> -->
@@ -158,8 +156,12 @@
                             </ul>
                         </nav>
                         <!-- FIN DE LA PAGINACION -->
-
                     </div>
+
+                    <div class="card-body text-center" v-else>
+                        <b>Cliente {{buscar}} no existe..!</b>
+                    </div>
+
                 </b-overlay>
             </div>
         </div><br><br><br>
@@ -214,7 +216,6 @@ export default {
         this.nombreAlias = this.DataBaseAlias;
         this.id = this.$route.params.GeneracionFactura;
         this.lecturasPendientesLecturados(this.id, this.nombreAlias);
-        // this.listarLecturas(this.id, this.buscar, this.tipo, this.nombreAlias);
         this.listarLecturas();
     },
 
@@ -246,19 +247,15 @@ export default {
                 .then(res => {
                     console.log(res.data.values.generacionLectura.data);
                     console.log(res.data.values.pagination);
+                    this.pagination    = res.data.values.pagination;
+                    this.arrayLecturas = res.data.values.generacionLectura.data;
 
-                    if(res.data.values.generacionLectura.data.length == 0){
-                        this.show = false;
-                    }else{
-                        this.pagination = res.data.values.pagination;
-                        this.arrayLecturas = res.data.values.generacionLectura.data;
-
+                    if(res.data.values.generacionLectura.data.length > 0){
                         this.zona = this.arrayLecturas[0].Zona;
                         this.ruta = this.arrayLecturas[0].Ruta;
-                        this.show = false;
                     }
 
-                    
+                    this.show = false;
                 })
                 .catch(e => {
                     // this.arrayLecturas = [];

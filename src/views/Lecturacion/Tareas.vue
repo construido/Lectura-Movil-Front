@@ -2,7 +2,7 @@
     <div>
         <NavBar></NavBar>
 
-        <div class="container">
+        <div class="container my-2">
             <b-card-group deck>
                 <b-card header="TAREAS" header-tag="header" :footer="fecha" footer-text-variant="center">
                     

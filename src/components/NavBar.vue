@@ -121,12 +121,29 @@
             </template>
         </b-modal>
 
-    <br>
+        <b-modal centered id="modal-cerrar-session" variant="transparent">
+            <template #modal-header="{ close }">
+                <b-button hidden variant="outline-danger" @click="close()">
+                    Cerrar
+                </b-button>
+                <h6 class="text-black"> Cerrando Sessión... </h6>
+            </template>
+
+            <b-overlay :show="show2" no-wrap></b-overlay>
+
+            <template #modal-footer="{ ok }">
+                <b-button hidden block variant="outline-success" @click="ok()">
+                    Aceptar
+                </b-button>
+                <h6>{{fecha}}</h6>
+            </template>
+        </b-modal>
     </div>
 </template>
 
 <script>
 // import {SessionExpirada} from './../Js/SessionExpirada'
+import moment from 'moment';
 
 export default {
     name: 'NavBar',
@@ -144,6 +161,9 @@ export default {
             texto: 'Mostrar Contraseña',
 
             show: false,
+            show2: false,
+            fecha:'',
+            hora:'',
         }
     },
 
@@ -204,6 +224,8 @@ export default {
             }
         },
         Logout(){
+            this.show2 = true;
+            this.$bvModal.show('modal-cerrar-session');
             this.axios.get('/admin/logout')
             .then(res => {
                 console.log(res.data);
@@ -215,6 +237,8 @@ export default {
                 localStorage.removeItem('DataBaseAlias');
                 localStorage.removeItem('Plomero');
                 localStorage.removeItem('Empresa');
+                this.show2 = false;
+                this.$bvModal.hide('modal-cerrar-session');
                 this.$router.push('/');
             }).catch(e => {
                 console.log(e.response);
@@ -233,12 +257,23 @@ export default {
             }
             return array;
         },
+
+        fechaActual(){
+            setInterval(() => {
+                this.fecha = moment().format("DD/MM/YYYY - HH:mm:ss");
+            }, 1000)
+        },
     },
 
     computed: {
         EmpresaNombre(){
             return localStorage.getItem('EmpresaNombre');
         },
-    }
+    },
+
+    created(){
+        this.fechaActual();
+        // setTimeout("this.fechaActual()",1000)
+    },
 }
 </script>

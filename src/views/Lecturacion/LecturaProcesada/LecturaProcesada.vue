@@ -2,7 +2,7 @@
     <div>
         <NavBar></NavBar>
         
-        <div class="container my-1">
+        <div class="container my-2">
             <div class="card">
                 <div class="card-header">
                     <div class="col-xl-6">
@@ -12,12 +12,7 @@
                     </div>
                 </div>
                 <b-overlay :show="show" class="d-inline-block">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-md-12 col-sm-12 col-lg-12" >
-
-                            </div>
-                        </div>
+                    <div class="card-body" v-if="arrayFacturas.length > 0">
                         <div class="table-responsive">
                             <table class="table table-striped table-borderless table-sm caption-top">
                             <caption> <b> Lecturas Procesadas </b> </caption>
@@ -41,9 +36,9 @@
                                         </td>
 
                                         <th hidden scope="row" class="text-center"> {{ index + 1 }} </th>
-                                        <td style="white-space:nowrap" v-if="item.Zona < 9 && item.Ruta < 9" align="right"> 0{{ item.Zona }}0{{ item.Ruta }} </td>
-                                        <td style="white-space:nowrap" v-else-if="item.Zona < 9" align="right"> 0{{ item.Zona }}{{ item.Ruta }} </td>
-                                        <td style="white-space:nowrap" v-else-if="item.Ruta < 9" align="right"> {{ item.Zona }}0{{ item.Ruta }} </td>
+                                        <td style="white-space:nowrap" v-if="item.Zona < 10 && item.Ruta < 10" align="right"> 0{{ item.Zona }}0{{ item.Ruta }} </td>
+                                        <td style="white-space:nowrap" v-else-if="item.Zona < 10" align="right"> 0{{ item.Zona }}{{ item.Ruta }} </td>
+                                        <td style="white-space:nowrap" v-else-if="item.Ruta < 10" align="right"> {{ item.Zona }}0{{ item.Ruta }} </td>
                                         <td style="white-space:nowrap" v-else align="right"> {{ item.Zona }}{{ item.Ruta }} </td>
                                         <td style="white-space:nowrap" align="right"> {{ item.Cobro}} </td>
                                         <td style="white-space:nowrap" align="right"> {{ item.FechaGeneracionLectura }} </td>
@@ -85,8 +80,12 @@
                             </ul>
                         </nav>
                         <!-- FIN DE LA PAGINACION -->
-                        
                     </div>
+
+                    <div class="card-body text-center" v-else>
+                        <b>Sin Planillas Procesadas..!</b>
+                    </div>
+
                 </b-overlay>
             </div>
         </div><br><br><br>
