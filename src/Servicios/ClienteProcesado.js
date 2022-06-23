@@ -1,10 +1,16 @@
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
+import {DataBaseAlias, Plomero, EmpresaNombre} from './ControlErrores'
 
 export default {
     name: 'LecturaInspeccion',
     data() {
         return {
+            // LogalStorage
+            DataBaseAlias: DataBaseAlias(),
+            EmpresaNombre: EmpresaNombre(),
+            Plomero      : Plomero(),
+
             arrayLecturas: [],
             arrayLecturasPendientes: [],
             buscar: '',
@@ -41,9 +47,8 @@ export default {
     },
 
     created() {
-        this.nombreAlias = this.DataBaseAlias;
         this.id = this.$route.params.GeneracionFactura;
-        this.lecturasPendientesLecturados(this.id, this.nombreAlias);
+        this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
         this.listarLecturas();
     },
 
@@ -127,15 +132,6 @@ export default {
     },
 
     computed: {
-        DataBaseAlias(){
-            return localStorage.getItem('DataBaseAlias');
-        },
-        EmpresaNombre(){
-            return localStorage.getItem('EmpresaNombre');
-        },
-        Plomero(){
-            return localStorage.getItem('Plomero');
-        },
         isActived: function(){
             return this.pagination.current_page;
         },

@@ -97,13 +97,19 @@
 <script>
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
+import {NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero} from '@/Servicios/ControlErrores'
 
 export default {
     name: 'LecturaPendiente',
     data() {
         return {
-            arrayFacturas: [],
+            // LocalStorage
+            ApellidoUsuario: ApellidoUsuario(),
+            NombreUsuario  : NombreUsuario(),
+            DataBaseAlias  : DataBaseAlias(),
+            Plomero        : Plomero(),
 
+            arrayFacturas: [],
             show: false,
             nombreAlias: '',
             plomero: '',
@@ -132,18 +138,6 @@ export default {
     },
 
     computed: {
-        NombreUsuario(){
-            return localStorage.getItem('NombreUsuario');
-        },
-        ApellidoUsuario(){
-            return localStorage.getItem('ApellidoUsuario');
-        },
-        DataBaseAlias(){
-            return localStorage.getItem('DataBaseAlias');
-        },
-        Plomero(){
-            return localStorage.getItem('Plomero');
-        },
         isActived: function(){
             return this.pagination.current_page;
         },

@@ -1,10 +1,16 @@
 import NavBar from '@/components/NavBar.vue'
+import {DataBaseAlias, Plomero, EmpresaNombre} from '@/Servicios/ControlErrores'
 
 export default {
     name: 'LecturaCliente',
 
     data() {
         return {
+            // LogalStorage
+            DataBaseAlias: DataBaseAlias(),
+            EmpresaNombre: EmpresaNombre(),
+            Plomero      : Plomero(),
+
             camposObligatorios: [],
             arrayCliente: [],
             arrayAnormalidades: [],
@@ -26,7 +32,6 @@ export default {
             show: true,
             show2: false,
             tipoConsumoVerificar: '',
-            nombreAlias: '',
 
             // OBTENER ERRORES DE LA LECTURA
             arrayErrores: [],
@@ -99,25 +104,15 @@ export default {
     },
 
     created(){
-        this.nombreAlias = this.DataBaseAlias;
         this.id = this.$route.params.GeneracionFactura;
         this.cli = this.$route.params.Cliente;
-        this.lecturasPendientesLecturados(this.id, this.nombreAlias);
-        this.obtenerCliente(this.id, this.cli, this.nombreAlias);
+        this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
+        this.obtenerCliente(this.id, this.cli, this.DataBaseAlias);
         this.obtenerUbicacion();
         this.listarAnormalidad(1);
     },
 
     computed: {
-        EmpresaNombre(){
-            return localStorage.getItem('EmpresaNombre');
-        },
-        DataBaseAlias(){
-            return localStorage.getItem('DataBaseAlias');
-        },
-        Plomero(){
-            return localStorage.getItem('Plomero');
-        },
         isActived: function(){
             return this.pagination.current_page;
         },
@@ -208,7 +203,7 @@ export default {
                     link.target = '_blank'
                     link.click();
                     this.limpiarCampos();
-                    this.obtenerClienteNext(this.id, this.nombreAlias);
+                    this.obtenerClienteNext(this.id, this.DataBaseAlias);
                     this.$bvModal.hide('modal-seguir');
                     this.show2  = false;
                 }else{
@@ -229,7 +224,7 @@ export default {
             this.$bvModal.hide('modal-sin-factura');
             this.$bvModal.hide('modal-seguir');
             this.limpiarCampos(); //TODO : Prueba
-            this.obtenerClienteNext(this.id, this.nombreAlias); //TODO : Prueba
+            this.obtenerClienteNext(this.id, this.DataBaseAlias); //TODO : Prueba
         },
         controlErrores(error){
 
@@ -272,7 +267,7 @@ export default {
             formData.append('tnPlomero', this.Plomero);
             formData.append('tnCategoria', this.categoria);
             formData.append('tnGeneracionFactura', this.id);
-            formData.append('DataBaseAlias', this.nombreAlias);
+            formData.append('DataBaseAlias', this.DataBaseAlias);
             formData.append('EmpresaNombre', this.EmpresaNombre);
             formData.append('tnLecturaActual', this.lecturaActual);
             formData.append('llNuevaLectura', this.llNuevaLectura);

@@ -1,10 +1,15 @@
 import NavBar from '@/components/NavBar.vue'
+import {DataBaseAlias, EmpresaNombre} from './ControlErrores'
 
 export default {
     name: 'Anormalidades',
 
     data() {
         return {
+            // LogalStorage
+            DataBaseAlias: DataBaseAlias(),
+            EmpresaNombre: EmpresaNombre(),
+
             arrayAnormalidades: [],
             show: false,
 
@@ -15,7 +20,6 @@ export default {
             regla:       '',
             inspeccion:  '',
             informativo: '',
-            nombreAlias: '',
             animation:   'none', // spin-pulse - para activar la animacion
 
             // Paginación
@@ -167,27 +171,16 @@ export default {
         limpiar(){
             this.buscar = '';
             this.tipo = 'Nombre';
-            this.nombreAlias = this.DataBaseAlias;
-            this.listarAnormalidades(this.tipo, this.buscar, this.nombreAlias);
+            this.listarAnormalidades(this.tipo, this.buscar, this.DataBaseAlias);
         }
     },
 
     created(){
-        this.nombreAlias = this.DataBaseAlias;
-        this.listarAnormalidades(this.tipo, this.buscar, this.nombreAlias);
+        this.listarAnormalidades(this.tipo, this.buscar, this.DataBaseAlias);
     },
 
     components:{
         'NavBar': NavBar
     },
-
-    computed: {
-        EmpresaNombre(){
-            return localStorage.getItem('EmpresaNombre');
-        },
-        DataBaseAlias(){
-            return localStorage.getItem('DataBaseAlias');
-        },
-    }
 
   }

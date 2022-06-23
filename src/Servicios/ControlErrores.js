@@ -26,4 +26,8 @@ function Plomero(){
     return localStorage.getItem('Plomero');
 }
 
-export { SessionExpirada, NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero };
+function EmpresaNombre(){
+    return localStorage.getItem('EmpresaNombre');
+}
+
+export { SessionExpirada, NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero, EmpresaNombre };

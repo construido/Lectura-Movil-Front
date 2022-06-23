@@ -173,11 +173,16 @@
 <script>
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
+import {DataBaseAlias, EmpresaNombre} from '@/Servicios/ControlErrores'
 
 export default {
     name: 'LecturaInspeccion',
     data() {
         return {
+            // LocalStorage
+            DataBaseAlias: DataBaseAlias(),
+            EmpresaNombre: EmpresaNombre(),
+
             arrayLecturas: [],
             arrayLecturasPendientes: [],
             buscar: '',
@@ -270,12 +275,6 @@ export default {
     },
 
     computed: {
-        DataBaseAlias(){
-            return localStorage.getItem('DataBaseAlias');
-        },
-        EmpresaNombre(){
-            return localStorage.getItem('EmpresaNombre');
-        },
         isActived: function(){
             return this.pagination.current_page;
         },
