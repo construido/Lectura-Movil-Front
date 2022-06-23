@@ -183,4 +183,4 @@
     </div>
 </template>
 
-<script src="../../../Js/ClienteProcesado.js"></script>
+<script src="@/Servicios/ClienteProcesado.js"></script>

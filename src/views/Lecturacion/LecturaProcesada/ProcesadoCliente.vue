@@ -330,4 +330,4 @@
     </div>
 </template>
 
-<script src="../../../Js/ProcesadoCliente.js"></script>
+<script src="@/Servicios/ProcesadoCliente.js"></script>

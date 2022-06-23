@@ -94,4 +94,4 @@
     </div>
 </template>
 
-<script src="../../../Js/LecturaProcesada.js"></script>
+<script src="@/Servicios/LecturaProcesada.js"></script>

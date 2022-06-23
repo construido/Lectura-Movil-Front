@@ -1,17 +1,22 @@
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
-// import {SessionExpirada} from './SessionExpirada'
+import {SessionExpirada, NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero} from './ControlErrores'
 
 export default {
     name: 'LecturaProcesada',
     data() {
         return {
+            // LogalStorage
+            ApellidoUsuario: ApellidoUsuario(),
+            NombreUsuario  : NombreUsuario(),
+            DataBaseAlias  : DataBaseAlias(),
+            Plomero        : Plomero(),
+
+            // Variables auxiliares para el sistema
             arrayFacturas: [],
-
-            show: false,
-            nombreAlias: '',
-            plomero: '',
-
+            nombreAlias  : '',            
+            plomero      : '',
+            show         : false,
             id: '',
             lecturados: [],
             pendientes: [],
@@ -36,18 +41,6 @@ export default {
     },
 
     computed: {
-        NombreUsuario(){
-            return localStorage.getItem('NombreUsuario');
-        },
-        ApellidoUsuario(){
-            return localStorage.getItem('ApellidoUsuario');
-        },
-        DataBaseAlias(){
-            return localStorage.getItem('DataBaseAlias');
-        },
-        Plomero(){
-            return localStorage.getItem('Plomero');
-        },
         isActived: function(){
             return this.pagination.current_page;
         },
@@ -88,21 +81,17 @@ export default {
             this.show = true;
             this.axios.post('/admin/listarPlanillaDeLecturasProcesadas?page='+page+'&DataBaseAlias='+this.DataBaseAlias+'&Plomero='+this.Plomero)
                 .then(res => {
-                    console.log(res.data);
-                    console.log(res.data.values.laGeneracionFactura.data);
-                    console.log(res.data.values.pagination);
-                    this.pagination = res.data.values.pagination;
-                    this.arrayFacturas = res.data.values.laGeneracionFactura.data;
-                    this.show = false;
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.pagination    = res.data.values.pagination;
+                        this.arrayFacturas = res.data.values.laGeneracionFactura.data;
+                        this.show          = false;
+                    }
                 })
                 .catch(e => {
                     this.arrayFacturas = [];
                     this.show = false;
-                    console.log(e);
-                    // if(e.response.status == 403){ // TODO
-                    //     SessionExpirada(e.response.status);
-                    //     this.$router.push('/');
-                    // }
                 })
         },
         listarClientes(id){

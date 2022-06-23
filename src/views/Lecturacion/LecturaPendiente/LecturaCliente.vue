@@ -327,7 +327,7 @@
     </div>
 </template>
 
-<script src="@/Js/LecturaCliente.js"></script>
+<script src="@/Servicios/LecturaCliente.js"></script>
 
 // <input type="file", @change="processFile($event)">
 // methods: {

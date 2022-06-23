@@ -153,4 +153,4 @@
     </div>
 </template>
 
-<script src="../Js/Anormalidades.js"></script>
+<script src="@/Servicios/Anormalidades.js"></script>

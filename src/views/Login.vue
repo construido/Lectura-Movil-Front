@@ -16,9 +16,9 @@
             <b-overlay :show="show" class="d-inline-block">
                 <div class="card-body">
                     <div class="form-floating">
-                      <input v-model="login" v-bind:class="[camposObligatorios.Login ? 'form-control is-invalid' : 'form-control']" type="text" class="form-control" id="login" placeholder="Login">
-                      <label for="login">Login</label>
-                      <span v-if="camposObligatorios.Login" v-text="camposObligatorios.Login[0]" class="text-danger"></span>
+                        <input v-model="login" v-bind:class="[camposObligatorios.Login ? 'form-control is-invalid' : 'form-control']" type="text" class="form-control" id="login" placeholder="Login">
+                        <label for="login">Login</label>
+                        <span v-if="camposObligatorios.Login" v-text="camposObligatorios.Login[0]" class="text-danger"></span>
                     </div><br>
                     <div class="form-floating">
                         <input v-model="password" v-bind:class="[camposObligatorios.password ? 'form-control is-invalid' : 'form-control']" :type="type" class="form-control" size="sm" id="contrasena" placeholder="Contraseña">
@@ -27,8 +27,8 @@
                     </div>
 
                     <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @click="showPassword">
-                      <label class="form-check-label" for="flexSwitchCheckChecked"> {{ texto }} </label>
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @click="showPassword">
+                        <label class="form-check-label" for="flexSwitchCheckChecked"> {{ texto }} </label>
                     </div>
                     <br>
                     <div class="d-grid gap-2">
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-  export default {
+export default {
     data() {
       return {
 
@@ -85,60 +85,59 @@
       }
     },
     methods:{
-      controlErrores(error){
-          var array = [];
+        controlErrores(error){
+            var array = [];
 
-          if (error.response.status == 422) {
-              array = error.response.data.errors
-          }else{
-              if (error.response.status == 401){
-                  this.mensajeHeader = 'Credenciales inválidos';
-                  this.mensajeBody = 'Intente nuevamente';
-                  this.$bvModal.show('modal-scoped');
-              }else{
-                if (error.response.status == 403) {
-                  this.mensajeHeader = 'Cuenta suspendida';
-                  this.mensajeBody = 'Contactar al Administrador';
-                  this.$bvModal.show('modal-scoped');
+            if (error.response.status == 422) {
+                array = error.response.data.errors
+            }else{
+                if (error.response.status == 401){
+                    this.mensajeHeader = 'Credenciales inválidos';
+                    this.mensajeBody = 'Intente nuevamente';
+                    this.$bvModal.show('modal-scoped');
+                }else{
+                    if (error.response.status == 403) {
+                    this.mensajeHeader = 'Cuenta suspendida';
+                    this.mensajeBody = 'Contactar al Administrador';
+                    this.$bvModal.show('modal-scoped');
+                    }
                 }
-              }
-          }
-          return array;
-      },
+            }
+            return array;
+        },
 
-      Login(){
-          this.show = true;
-          this.axios.post('/login', {
-              'Login'    : this.login,
-              'password' : this.password
-          }).then(res => {
-              this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token.token;
-              localStorage.setItem('token', res.data.token.token);
-              localStorage.setItem('NombreUsuario', res.data.data.Nombre);
-              localStorage.setItem('ApellidoUsuario', res.data.data.Apellidos);
-              localStorage.setItem('EmpresaNombre', res.data.data.EmpresaNombre);
-              localStorage.setItem('DataBaseAlias', res.data.data.DataBaseAlias);
-              localStorage.setItem('Plomero', res.data.data.Plomero);
-              this.show = false;
-              this.$router.push('/menu');
+        Login(){
+            this.show = true;
+            this.axios.post('/login', {
+                'Login'    : this.login,
+                'password' : this.password
+            }).then(res => {
+                this.axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token.token;
+                localStorage.setItem('token', res.data.token.token);
+                localStorage.setItem('NombreUsuario', res.data.data.Nombre);
+                localStorage.setItem('ApellidoUsuario', res.data.data.Apellidos);
+                localStorage.setItem('EmpresaNombre', res.data.data.EmpresaNombre);
+                localStorage.setItem('DataBaseAlias', res.data.data.DataBaseAlias);
+                localStorage.setItem('Plomero', res.data.data.Plomero);
+                this.show = false;
+                this.$router.push('/menu');
 
-          }).catch(e => {
-              console.log(e.response);
-              this.camposObligatorios = this.controlErrores(e);
-              this.show = false;
-          })
-      },
+            }).catch(e => {
+                this.camposObligatorios = this.controlErrores(e);
+                this.show = false;
+            })
+        },
 
-      showPassword() {
-          if(this.type == 'password') {
-              this.type = 'text'
-              this.texto = 'Ocultar Contraseña'
-          } else {
-              this.type = 'password'
-              this.texto = 'Mostrar Contraseña'
-          }
-      },
+        showPassword() {
+            if(this.type == 'password') {
+                this.type = 'text'
+                this.texto = 'Ocultar Contraseña'
+            } else {
+                this.type = 'password'
+                this.texto = 'Mostrar Contraseña'
+            }
+        },
 
     }
-  }
+}
 </script>
