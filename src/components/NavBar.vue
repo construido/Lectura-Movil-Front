@@ -142,7 +142,7 @@
 </template>
 
 <script>
-// import {SessionExpirada} from './../Js/SessionExpirada'
+import {EmpresaNombre} from '@/Servicios/ControlErrores'
 import moment from 'moment';
 
 export default {
@@ -150,8 +150,10 @@ export default {
 
     data() {
         return {
-            camposObligatorios: [],
+            // LocalStorage
+            EmpresaNombre: EmpresaNombre(),
 
+            camposObligatorios: [],
             contrasena_actual : '',
             contrasena_nueva  : '',
             repetir_contrasena: '',
@@ -242,10 +244,6 @@ export default {
                 this.$router.push('/');
             }).catch(e => {
                 console.log(e.response);
-                // if(e.response.status == 403){ // TODO
-                //     SessionExpirada(e.response.status);
-                //     this.$router.push('/');
-                // }
             })
         },
         controlErrores(error){
@@ -262,12 +260,6 @@ export default {
             setInterval(() => {
                 this.fecha = moment().format("DD/MM/YYYY - HH:mm:ss");
             }, 1000)
-        },
-    },
-
-    computed: {
-        EmpresaNombre(){
-            return localStorage.getItem('EmpresaNombre');
         },
     },
 

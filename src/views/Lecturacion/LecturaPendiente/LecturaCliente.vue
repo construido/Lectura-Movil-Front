@@ -328,10 +328,3 @@
 </template>
 
 <script src="@/Servicios/LecturaCliente.js"></script>
-
-// <input type="file", @change="processFile($event)">
-// methods: {
-//   processFile(event) {
-//     this.someData = event.target.files[0]
-//   }
-// }
