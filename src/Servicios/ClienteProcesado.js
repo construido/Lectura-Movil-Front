@@ -1,6 +1,6 @@
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
-import {DataBaseAlias, Plomero, EmpresaNombre} from './ControlErrores'
+import {SessionExpirada, DataBaseAlias, Plomero, EmpresaNombre} from './ControlErrores'
 
 export default {
     name: 'LecturaInspeccion',
@@ -71,21 +71,26 @@ export default {
                 'tnCliente'           : Cliente
             }).then(res => {
                 console.log(res.data);
-                if (res.data.status == 1){
-                    const url   = res.data.values;
-                    const link  = document.createElement('a');
-                    link.href   = url;
-                    link.target = '_blank'
-                    link.click();
-                    this.show = false;
+
+                if (res.data.status == 403){
+                    SessionExpirada();
                 }else{
-                    if (res.data.status == 0) {
-                        this.messageAlerta = res.data.message;
-                        this.$bvModal.show('modal-sin-factura');
+                    if (res.data.status == 1){
+                        const url   = res.data.values;
+                        const link  = document.createElement('a');
+                        link.href   = url;
+                        link.target = '_blank'
+                        link.click();
                         this.show = false;
+                    }else{
+                        if (res.data.status == 0) {
+                            this.messageAlerta = res.data.message;
+                            this.$bvModal.show('modal-sin-factura');
+                            this.show = false;
+                        }
                     }
                 }
-
+                this.show = false;
             }).catch(e => {
                 console.log(e.response);
             })
@@ -93,34 +98,39 @@ export default {
         lecturasPendientesLecturados(id, DataBaseAlias){
             this.axios.post('/admin/lecturasPendientesLecturados?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias)
                 .then(res => {
-                    console.log(res);
-                    this.arrayLecturasPendientes = res.data.values;
-
-                    this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
-                    this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.arrayLecturasPendientes = res.data.values;
+                        this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
+                        this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
+                    }
                 })
                 .catch(e => {
-                    console.log(e.response);
+                    this.arrayLecturasPendientes = [];
+                    this.lecturados = 0;
+                    this.pendientes = 0;
                 })
         },
         listarLecturas(page){
             this.show = true;
             this.axios.post('/admin/listarProcesadas?page='+page+'&tcGeneracionFactura='+this.id+'&dato='+this.buscar+'&tipo='+this.tipo+'&DataBaseAlias='+this.DataBaseAlias)
                 .then(res => {
-                    console.log(res.data);
-                    this.arrayLecturas = res.data.values.generacionLectura.data;
-                    this.pagination    = res.data.values.pagination;
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.arrayLecturas = res.data.values.generacionLectura.data;
+                        this.pagination    = res.data.values.pagination;
 
-                    if (res.data.values.generacionLectura.data.length > 0) {
-                        this.zona = this.arrayLecturas[0].Zona;
-                        this.ruta = this.arrayLecturas[0].Ruta;
+                        if (res.data.values.generacionLectura.data.length > 0) {
+                            this.zona = this.arrayLecturas[0].Zona;
+                            this.ruta = this.arrayLecturas[0].Ruta;
+                        }
+                        this.show = false;
                     }
-
-                    this.show = false;
                 })
                 .catch(e => {
                     this.arrayLecturas = [];
-                    console.log(e.response);
                     this.show = false;
                 })
         },

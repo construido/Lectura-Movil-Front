@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar.vue'
-import {DataBaseAlias, EmpresaNombre} from './ControlErrores'
+import {SessionExpirada, DataBaseAlias, EmpresaNombre} from './ControlErrores'
 
 export default {
     name: 'Anormalidades',
@@ -42,37 +42,39 @@ export default {
             this.show = true;
             this.axios.post('/admin/AnormalidadesDeMedidor?Tipo='+tipo+'&Dato='+buscar+'&DataBaseAlias='+DataBaseAlias)
                 .then(res => {
-                    console.log(res.data);
-
-                    if (res.data.values == 0) {
-                        this.nextDisabled=          true;
-                        this.nextEndDisabled=       true;
-                        this.previousDisabled=      true;
-                        this.previousStartDisabled= true;
-                        this.$bvModal.show('modal-scoped');
+                    if (res.data.status == 403){
+                        SessionExpirada();
                     }else{
-                        this.arrayAnormalidades = res.data.values;
-                        this.count = this.arrayAnormalidades.length;
-                        this.index = 0;
-                        this.cargarValores();
-                        if (this.count == 1) {
-                            this.nextDisabled=          true;
-                            this.nextEndDisabled=       true;
-                            this.previousDisabled=      true;
+                        if (res.data.values == 0) {
+                            this.nextDisabled         = true;
+                            this.nextEndDisabled      = true;
+                            this.previousDisabled     = true;
                             this.previousStartDisabled= true;
+                            this.$bvModal.show('modal-scoped');
                         }else{
-                            this.nextDisabled=          false;
-                            this.nextEndDisabled=       false;
-                            this.previousDisabled=      true;
-                            this.previousStartDisabled= true;
-                            
+                            this.arrayAnormalidades = res.data.values;
+                            this.count = this.arrayAnormalidades.length;
+                            this.index = 0;
+                            this.cargarValores();
+                            if (this.count == 1) {
+                                this.nextDisabled         = true;
+                                this.nextEndDisabled      = true;
+                                this.previousDisabled     = true;
+                                this.previousStartDisabled= true;
+                            }else{
+                                this.nextDisabled         = false;
+                                this.nextEndDisabled      = false;
+                                this.previousDisabled     = true;
+                                this.previousStartDisabled= true;
+                                
+                            }
                         }
+                        this.show = false;
                     }
-                    this.show = false;
                 })
                 .catch(e => {
                     this.arrayAnormalidades = [];
-                    console.log(e.response);
+                    this.show = false;
                 })
         },
         cargarValores(){

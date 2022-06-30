@@ -1,6 +1,6 @@
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
-import {DataBaseAlias, EmpresaNombre} from '@/Servicios/ControlErrores'
+import {SessionExpirada, DataBaseAlias, EmpresaNombre} from '@/Servicios/ControlErrores'
 
 export default {
     name: 'LecturaInspeccion',
@@ -19,7 +19,6 @@ export default {
             pendientes: '',
 
             show: false,
-            nombreAlias: '',
 
             // PAGINACIÓN
             pagination : {
@@ -45,9 +44,8 @@ export default {
     },
 
     created() {
-        this.nombreAlias = this.DataBaseAlias;
         this.id = this.$route.params.GeneracionFactura;
-        this.lecturasPendientesLecturados(this.id, this.nombreAlias);
+        this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
         this.listarLecturas();
     },
 
@@ -63,11 +61,13 @@ export default {
         lecturasPendientesLecturados(id, DataBaseAlias){
             this.axios.post('/admin/lecturasPendientesLecturados?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias)
                 .then(res => {
-                    console.log(res);
-                    this.arrayLecturasPendientes = res.data.values;
-
-                    this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
-                    this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.arrayLecturasPendientes = res.data.values;
+                        this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
+                        this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
+                    }
                 })
                 .catch(e => {
                     console.log(e.response);
@@ -77,21 +77,22 @@ export default {
             this.show = true;
             this.axios.post('/admin/listarLecturas?page='+page+'&tcGeneracionFactura='+this.id+'&dato='+this.buscar+'&tipo='+this.tipo+'&DataBaseAlias='+this.DataBaseAlias)
                 .then(res => {
-                    console.log(res.data.values.generacionLectura.data);
-                    console.log(res.data.values.pagination);
-                    this.pagination    = res.data.values.pagination;
-                    this.arrayLecturas = res.data.values.generacionLectura.data;
-
-                    if(res.data.values.generacionLectura.data.length > 0){
-                        this.zona = this.arrayLecturas[0].Zona;
-                        this.ruta = this.arrayLecturas[0].Ruta;
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.pagination    = res.data.values.pagination;
+                        this.arrayLecturas = res.data.values.generacionLectura.data;
+    
+                        if(res.data.values.generacionLectura.data.length > 0){
+                            this.zona = this.arrayLecturas[0].Zona;
+                            this.ruta = this.arrayLecturas[0].Ruta;
+                        }
+                        this.show = false;
                     }
-
-                    this.show = false;
                 })
                 .catch(e => {
-                    // this.arrayLecturas = [];
-                    console.log(e.response);
+                    this.arrayLecturas = [];
+                    this.show = false;
                 })
         },
         limpiar(){

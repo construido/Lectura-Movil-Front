@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar.vue'
-import {DataBaseAlias, Plomero, EmpresaNombre} from './ControlErrores'
+import {SessionExpirada, DataBaseAlias, Plomero, EmpresaNombre} from './ControlErrores'
 
 export default {
     name: 'LecturaCliente',
@@ -161,14 +161,18 @@ export default {
         lecturasPendientesLecturados(id, DataBaseAlias){
             this.axios.post('/admin/lecturasPendientesLecturados?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias)
                 .then(res => {
-                    console.log(res);
-                    this.arrayLecturasPendientes = res.data.values;
-
-                    this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
-                    this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.arrayLecturasPendientes = res.data.values;
+                        this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
+                        this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
+                    }
                 })
                 .catch(e => {
-                    console.log(e.response);
+                    this.arrayLecturasPendientes = [];
+                    this.lecturados = 0;
+                    this.pendientes = 0;
                 })
         },
         inputFocus(){
@@ -217,8 +221,6 @@ export default {
                 'tnCliente'           : this.idCliente,
                 'tnPlomero'           : this.Plomero
             }).then(res => {
-                console.log(res.data);
-
                 if (res.data.status == 1){
                     const url   = res.data.values;
                     const link  = document.createElement('a');
@@ -324,8 +326,6 @@ export default {
             this.show2 = true;
             this.axios.post('/admin/llenarSelectAnormalidad?page='+page+'&tcDataBaseAlias='+this.DataBaseAlias+'&tcOrden='+this.orden+'&tcTipo='+this.tipo+'&tcDato='+this.dato)
                 .then(res => {
-                    console.log(res);
-                    
                     this.pagination = res.data.values.pagination;
                     this.arrayAnormalidades = res.data.values.laMedidorAnormalidad.data;
                     this.mostrar = !this.mostrar;
@@ -348,32 +348,34 @@ export default {
         obtenerCliente(id, cli, DataBaseAlias){
             this.axios.post('/admin/verLecturaIdProcesada?tcGeneracionFactura='+id+'&tcCliente='+cli+'&DataBaseAlias='+DataBaseAlias)
                 .then(res => {
-                    console.log(res);
-                    this.arrayCliente = res.data.values;
-                    this.cargarValores();
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.arrayCliente = res.data.values;
+                        this.cargarValores();
+                    }
                 })
                 .catch(e => {
-                    // this.sizes = [];
-                    console.log(e);
                     this.show = false;
                 })
         },
         obtenerClienteNext(id, DataBaseAlias){
-            this.show = true; // TODO : Descomentar en caso de problemas
+            this.show = true;
             this.axios.post('/admin/verLecturaIdNextProcesada?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias+'&CodigoUbicacion='+this.codigoUbicacion)
                 .then(res => {
-                    console.log(res);
-                    if (res.data.values.length == 0) {
-                        this.$bvModal.show('modal-sin-cliente');
+                    if (res.data.status == 403){
+                        SessionExpirada();
                     }else{
-                        this.arrayCliente = res.data.values;
-                        this.cargarValoresNext();
+                        if (res.data.values.length == 0) {
+                            this.$bvModal.show('modal-sin-cliente');
+                        }else{
+                            this.arrayCliente = res.data.values;
+                            this.cargarValoresNext();
+                        }
+                        this.show = false;
                     }
-                    
-                    this.show = false; // TODO : Descomentar en caso de problemas
                 })
                 .catch(e => {
-                    // this.sizes = [];
                     console.log(e.response);
                     this.show = false;
                 })

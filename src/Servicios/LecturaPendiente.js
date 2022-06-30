@@ -1,6 +1,6 @@
 import NavBar from '@/components/NavBar.vue'
 import BtnAtras from '@/components/BtnAtras.vue'
-import {NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero} from '@/Servicios/ControlErrores'
+import {SessionExpirada, NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero} from '@/Servicios/ControlErrores'
 
 export default {
     name: 'LecturaPendiente',
@@ -81,15 +81,17 @@ export default {
             this.show = true;
             this.axios.post('/admin/listarPlanillaDeLecturasPendientes?page='+page+'&DataBaseAlias='+this.DataBaseAlias+'&Plomero='+this.Plomero)
                 .then(res => {
-                    console.log(res.data.values.laGeneracionFactura.data);
-                    console.log(res.data.values.pagination);
-                    this.pagination = res.data.values.pagination;
-                    this.arrayFacturas = res.data.values.laGeneracionFactura.data;
-                    this.show = false;
+                    if (res.data.status == 403){
+                        SessionExpirada();
+                    }else{
+                        this.pagination = res.data.values.pagination;
+                        this.arrayFacturas = res.data.values.laGeneracionFactura.data;
+                        this.show = false;
+                    }
                 })
                 .catch(e => {
                     this.arrayFacturas = [];
-                    console.log(e.response);
+                    this.show = false;
                 })
         },
         listarClientes(id){
