@@ -30,4 +30,12 @@ function EmpresaNombre(){
     return localStorage.getItem('EmpresaNombre');
 }
 
-export { SessionExpirada, NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero, EmpresaNombre };
+function HIDANGER(){
+    return localStorage.getItem('HIDANGER');
+}
+
+function HGDANGER(){
+    return localStorage.getItem('HGDANGER');
+}
+
+export { SessionExpirada, NombreUsuario, ApellidoUsuario, DataBaseAlias, Plomero, EmpresaNombre, HIDANGER, HGDANGER };

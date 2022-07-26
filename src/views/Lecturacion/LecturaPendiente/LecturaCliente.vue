@@ -7,7 +7,14 @@
                 <div class="card-header">
                     <div class="col-xl-6">
                         <div class="text-center">
-                            <h5> <b> Lecturación [{{lecturados}}/{{pendientes}}]</b>  </h5>
+                            <h5> <b> Lecturación [{{lecturados}}/{{pendientes}}]</b> 
+                                <!-- <b-button class="btn btn-sm mx-1" :variant="HI" @click="habilitarImpresora">
+                                    <b-icon icon="printer-fill" scale="1" color="black"></b-icon>
+                                </b-button>
+                                <b-button class="btn btn-sm" :variant="HG" @click="habilitarGPS">
+                                    <b-icon icon="geo-alt-fill" scale="1" color="black"></b-icon>
+                                </b-button> -->
+                            </h5>
                         </div>
                     </div>
                 </div>

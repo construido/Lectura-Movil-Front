@@ -93,6 +93,7 @@ export default {
                 this.show = false;
             }).catch(e => {
                 console.log(e.response);
+                this.show = false;
             })
         },
         lecturasPendientesLecturados(id, DataBaseAlias){

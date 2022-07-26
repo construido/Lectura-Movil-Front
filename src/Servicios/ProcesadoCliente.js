@@ -105,7 +105,7 @@ export default {
         this.cli = this.$route.params.Cliente;
         this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
         this.obtenerCliente(this.id, this.cli, this.DataBaseAlias);
-        this.obtenerUbicacion();
+        // this.obtenerUbicacion();
         this.listarAnormalidad(1);
     },
 

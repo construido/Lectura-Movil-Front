@@ -30,6 +30,7 @@
                         <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @click="showPassword">
                         <label class="form-check-label" for="flexSwitchCheckChecked"> {{ texto }} </label>
                     </div>
+                                        
                     <br>
                     <div class="d-grid gap-2">
                         <b-button @click="Login()" variant="success">INGRESAR
@@ -119,6 +120,8 @@ export default {
                 localStorage.setItem('EmpresaNombre', res.data.data.EmpresaNombre);
                 localStorage.setItem('DataBaseAlias', res.data.data.DataBaseAlias);
                 localStorage.setItem('Plomero', res.data.data.Plomero);
+                if (!localStorage.getItem('HIDANGER')) localStorage.setItem('HIDANGER', 'danger');
+                if (!localStorage.getItem('HGDANGER')) localStorage.setItem('HGDANGER', 'danger');
                 this.show = false;
                 this.$router.push('/menu');
 

@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar.vue'
-import {SessionExpirada, DataBaseAlias, Plomero, EmpresaNombre} from '@/Servicios/ControlErrores'
+import {SessionExpirada, DataBaseAlias, Plomero, EmpresaNombre, HIDANGER, HGDANGER} from '@/Servicios/ControlErrores'
 
 export default {
     name: 'LecturaCliente',
@@ -10,6 +10,10 @@ export default {
             DataBaseAlias: DataBaseAlias(),
             EmpresaNombre: EmpresaNombre(),
             Plomero      : Plomero(),
+
+            // Habilitar y Desabilitar Impresora y GPS
+            HI: HIDANGER(),
+            HG: HGDANGER(),
 
             camposObligatorios: [],
             arrayCliente: [],
@@ -108,7 +112,7 @@ export default {
         this.cli = this.$route.params.Cliente;
         this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
         this.obtenerCliente(this.id, this.cli, this.DataBaseAlias);
-        this.obtenerUbicacion();
+        // this.obtenerUbicacion();
         this.listarAnormalidad(1);
     },
 
@@ -140,6 +144,26 @@ export default {
     },
 
     methods: {
+        habilitarImpresora(){
+            if(this.HI == 'danger'){
+                localStorage.setItem('HIDANGER', 'success')
+                this.HI = HIDANGER()
+            }
+            else{
+                localStorage.setItem('HIDANGER', 'danger')
+                this.HI = HIDANGER()
+            }
+        },
+        habilitarGPS(){
+            if(this.HG == 'danger'){
+                localStorage.setItem('HGDANGER', 'success')
+                this.HG = HGDANGER()
+            }
+            else{
+                localStorage.setItem('HGDANGER', 'danger')
+                this.HG = HGDANGER()
+            }
+        },
         mostrarBtn(){
             this.mostrar = true;
         },
