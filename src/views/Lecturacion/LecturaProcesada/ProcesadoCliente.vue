@@ -37,10 +37,33 @@
                                 <span v-if="camposObligatorios.tcLecturaActual" v-text="camposObligatorios.tcLecturaActual[0]" class="text-danger"></span>
                             </div>
 
-                            <b-input-group class="my-sm-0">
+                            <!--<b-input-group class="my-sm-0">
                                 <b-form-input readonly type="text" placeholder="CodUbi - Cliente - Nombre" v-model="anormalidad"></b-form-input>
                                 <b-button @click="modalAnormalidad" variant="primary"><b-icon icon="search"></b-icon></b-button>
-                            </b-input-group>
+                            </b-input-group>-->
+
+                            <div>
+                                <b-card no-body>
+                                    <b-tabs card>
+                                        <b-tab title="Anormalidad 1" active>
+                                            <b-card-text>
+                                                <b-input-group class="my-sm-0">
+                                                    <b-form-input readonly type="text" placeholder="CodUbi - Cliente - Nombre" v-model="anormalidad"></b-form-input>
+                                                    <b-button @click="modalAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
+                                                </b-input-group>
+                                            </b-card-text>
+                                        </b-tab>
+                                        <b-tab title="Anormalidad 2">
+                                            <b-card-text>
+                                                <b-input-group class="my-sm-0">
+                                                    <b-form-input readonly type="text" placeholder="CodUbi - Cliente - Nombre" v-model="anormalidad2"></b-form-input>
+                                                    <b-button @click="modalAnormalidad(2)" variant="primary"><b-icon icon="search"></b-icon></b-button>
+                                                </b-input-group>
+                                            </b-card-text>
+                                        </b-tab>
+                                    </b-tabs>
+                                </b-card>
+                            </div>
                         </div>
 
                         <div v-else>

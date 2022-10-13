@@ -121,7 +121,8 @@
                                                     <b> Consumo: </b> {{ item.Consumo }} <br>
                                                     <b> Lectura Actual: </b> {{ item.LecturaActual }} <br>
                                                     <b> Consumo Facturado: </b> {{ item.ConsumoFacturado }} <br>
-                                                    <b> Anormalidad: </b> {{ item.NombreTC }} - {{ item.NombreAnormalidad }} - {{ item.MedidorAnormalidad}}
+                                                    <b> Anormalidad: </b> {{ item.NombreTC }} - {{ item.NombreAnormalidad }} - {{ item.MedidorAnormalidad }} <br>
+                                                    <b> Anormalidad 2: </b> {{ item.N2 }} - {{ item.NA2 }} - {{ item.MedidorAnormalidad2 }}
                                                 </b-card>
                                             </b-collapse>
                                         </td>

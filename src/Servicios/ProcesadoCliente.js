@@ -22,8 +22,11 @@ export default {
             lecturados: '',
             pendientes: '',
 
+            anormalidadSelect: 1, // TODO nueva variable implementada 06-10-2022 para la nueva anormalidad
             anormalidad: 'Sin Anormalidad - - 0',
+            anormalidad2: 'Sin Anormalidad - - 0', // TODO: nueva variable implementada 06-10-2022 para la nueva anormalidad
             anormalidadCorrecta: 0,
+            anormalidadCorrecta2: 0, // TODO: nueva variable implementada 06-10-2022 para la nueva anormalidad
             id: '',
             cli: '',
             lecturaActual: '',
@@ -152,8 +155,29 @@ export default {
             this.dato  = '';
             this.mostrar = true;
         },
-        modalAnormalidad(){
+        modalAnormalidad(dato){ // TODO: se le implemento la variable "dato" que recibe del formulario
+            console.log(dato);
+            this.anormalidadSelect = dato; // TODO
             this.$bvModal.show('modal-anormalidad');
+        },
+        cargarAnormalidad(objeto){ // TODO: se modificó e implementó un if para la selección de anormalidades
+            let nombre = objeto.Nombre;
+            nombre = nombre != null ? nombre : '';
+
+            /*this.anormalidad = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
+            this.anormalidadCorrecta = objeto.MedidorAnormalidad;*/
+
+            if(this.anormalidadSelect == 1){
+                this.anormalidad = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
+                this.anormalidadCorrecta = objeto.MedidorAnormalidad;
+                console.log(this.anormalidadCorrecta);
+            }else{
+                this.anormalidad2 = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
+                this.anormalidadCorrecta2 = objeto.MedidorAnormalidad;
+                console.log(this.anormalidadCorrecta2);
+            }
+
+            this.$bvModal.hide('modal-anormalidad');
         },
         habilitar(){
             return this.disable = true;
@@ -275,6 +299,7 @@ export default {
             formData.append('tnCobro', this.arrayCliente[0].Cobro);
             formData.append('tnLecturaAnterior', this.lecturaAnterior);
             formData.append('tnMedidorAnormalidad', this.anormalidadCorrecta);
+            formData.append('tnMedidorAnormalidad2', this.anormalidadCorrecta2); // TODO:
             formData.append('tnCodigoUbicacion', this.arrayCliente[0].CodigoUbicacion);
 
             this.axios.post('/admin/DO_LecturarNormal', formData).then(res => {
@@ -284,7 +309,9 @@ export default {
                     this.valido = 0;
                     this.lecturaActual = '';
                     this.anormalidad = 'Sin Anormalidad - - 0',
+                    this.anormalidad2 = 'Sin Anormalidad - - 0',  // TODO:
                     this.anormalidadCorrecta = 0,
+                    this.anormalidadCorrecta2 = 0,  // TODO:
                     this.$bvModal.show('modal-seguir');
                     this.DatosFactura(this.id, this.cli);
                     let input = document.getElementById("file");
@@ -335,15 +362,6 @@ export default {
                     this.sizes = [];
                     console.log(e.response);
                 })
-        },
-        cargarAnormalidad(objeto){
-            let nombre = objeto.Nombre;
-            nombre = nombre != null ? nombre : '';
-
-            this.anormalidad = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
-            this.anormalidadCorrecta = objeto.MedidorAnormalidad;
-
-            this.$bvModal.hide('modal-anormalidad');
         },
         obtenerCliente(id, cli, DataBaseAlias){
             this.axios.post('/admin/verLecturaIdProcesada?tcGeneracionFactura='+id+'&tcCliente='+cli+'&DataBaseAlias='+DataBaseAlias)
@@ -397,6 +415,11 @@ export default {
                 this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
             }
 
+            if(this.arrayCliente[0].N2 != null){
+                this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
+            }
+
             if(this.medidor == 0)
                 this.conMedidor = false;
             else
@@ -417,6 +440,11 @@ export default {
             if(this.arrayCliente[0].NombreTC != null){
                 this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
                 this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+            }
+
+            if(this.arrayCliente[0].N2 != null){
+                this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
             }
 
             if(this.medidor == 0)
