@@ -92,6 +92,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaInspeccion/LecturaInspeccion.vue'),
   }, // ************************************* NAVBAR DE SINCRONIZACION *****************************************
      // ********************************************************************************************************
+    {  
+    path: '/sincronizacion',
+    name: 'Sincronizacion',
+    component: () => import(/* webpackChunkName: "servidorcelular" */ '../views/Sincronizacion/Sincronizacion.vue'),
+  },
   {  
     path: '/sincronizacion/servidorcelular',
     name: 'ServidorCelular',
@@ -126,8 +131,6 @@ const router = new VueRouter({
 })
 
 function existToken() {
-  //   if(localStorage.getItem('token')) return 1; //localStorage.getItem('token');
-  //   else return 0;
   try {
     if (localStorage.getItem('token')){
 
