@@ -47,7 +47,6 @@
                             </table>
                         </div>
 
-{{idPlanilla}}
                         <!-- INICIO DE LA PAGINACION --
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-center mt-2">
@@ -70,6 +69,24 @@
                         </nav>
                         !-- FIN DE LA PAGINACION -->
 
+                        <b-modal centered id="modal-sincronizacion">
+                            <template #modal-header="{ close }">
+                                <b-button hidden variant="outline-danger" @click="close()">
+                                    Cerrar
+                                </b-button>
+
+                                <h5 :class="'text-'+color"> {{header}} </h5>
+                            </template>
+
+                            <h5 class="text-black"> {{message}} </h5>
+
+                            <template #modal-footer="{ cancel }">
+                                <b-button block :variant="'outline-'+color" @click="cancel()">
+                                    Aceptar
+                                </b-button>
+                            </template>
+                        </b-modal>
+
                     </div>
 
                 </b-overlay>
@@ -80,7 +97,7 @@
             <!-- Copyright -->
             <div class="text-center p-3">
                 <div class="d-grid gap-2">
-                    <b-button variant="success" @click="WMSincronizacionBDListDemo()"> Guardar </b-button>
+                    <b-button variant="success" @click="WMSincronizacionBDListDemo()"> Sincronizar </b-button>
                     <b-button @click="$router.go(-1)" variant="danger"> Volver </b-button>
                 </div>
             </div>

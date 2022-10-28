@@ -17,6 +17,11 @@ export default {
             idPlanilla: [],
             arraryPlanillas : [],
             usuario: NombreUsuario() + ' ' + ApellidoUsuario(),
+
+            // variables para el modal
+            color : '',
+            header : '',
+            message : '',
         }
     },
 
@@ -40,9 +45,21 @@ export default {
                 'GeneracionFactura' : this.idPlanilla
             })
             .then( res => {
-                //this.arraryPlanillas = res.data
                 console.log(res.data)
+
+                if(res.data.status == 1) {
+                    this.color   = 'success'
+                    this.header  = res.data.message
+                    this.message = res.data.values
+                }
+                else{
+                    this.color   = 'danger'
+                    this.header  = res.data.message
+                    this.message = res.data.values
+                }
+
                 this.show = false
+                this.$bvModal.show('modal-sincronizacion');
             })
             .catch( err => {
                 console.log(err.response)
