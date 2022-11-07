@@ -13,7 +13,7 @@ export default {
 
     data() {
         return {
-            show: false,
+            show2: false,
             active: true,
             idPlanilla: [],
             arraryPlanillas : [],
@@ -23,9 +23,8 @@ export default {
             color : '',
             header : '',
             message : '',
-            showbtn : true,
 
-            // datos de la number
+            // datos de la nube
             show: false,
             DataBaseAlias  : DataBaseAlias(),
             Plomero        : Plomero(),
@@ -46,47 +45,21 @@ export default {
         click(event){
             this.active = event
         },
-        showModal(color, header, message, status){
-            if(status == 1){
-                this.showbtn = false
-                this.color   = color
-                this.header  = header
-                this.message = message
-            }else if(status == 0){
-                this.showbtn = false
-                this.color   = color
-                this.header  = header
-                this.message = message
-            }else if(this.idPlanilla.length > 0){
-                this.showbtn = true
-                this.color   = 'success'
-                this.header  = 'INFORMACIÓN'
-                this.message = 'Los datos del móvil serán borrados. Desea continuar..?'
-            }else{
-                this.showbtn = false
-                this.color   = 'danger'
-                this.header  = 'ERROR'
-                this.message = 'Debe Seleccionar una plantilla...'
-            }
-
-            this.$bvModal.show('modal-sincronizacion');
-        },
         WMGet_Lecturas_Pendientes(){
-            this.show = true
+            this.show2 = true
             this.axios.post('admin/WMGet_Lecturas_Pendientes')
             .then( res => {
                 this.arraryPlanillas = res.data
-                //console.log(res.data)
-                //this.show = false
+                console.log(res.data)
+                this.show2 = false
             })
             .catch( err => {
                 console.log(err.response)
-                this.show = false
+                this.show2 = false
             })
         },
-        WMSincronizacionBDListDemo(){
-            this.show = true
-            this.$bvModal.hide('modal-sincronizacion');
+        /*WMSincronizacionBDListDemo(){
+            this.show2 = true
             this.axios.post('admin/WMSincronizacionBDListDemo', {
                 'GeneracionFactura' : this.idPlanilla
             })
@@ -95,28 +68,24 @@ export default {
 
                 if(res.data.status == 1) {
                     this.listarFacturas()
-                    this.idPlanilla = []
-                    this.showModal('success', res.data.message, res.data.values, res.data.status)
-                    /*this.color   = 'success'
+                    this.color   = 'success'
                     this.header  = res.data.message
-                    this.message = res.data.values*/
+                    this.message = res.data.values
                 }
                 else{
-                    this.idPlanilla = []
-                    this.showModal('success', res.data.message, res.data.values, res.data.status)
-                    /*this.color   = 'danger'
+                    this.color   = 'danger'
                     this.header  = res.data.message
-                    this.message = res.data.values*/
+                    this.message = res.data.values
                 }
 
-                //this.show = false
-                //this.$bvModal.show('modal-sincronizacion');
+                this.show2 = false
+                this.$bvModal.show('modal-sincronizacion');
             })
             .catch( err => {
                 console.log(err.response)
-                this.show = false
+                this.show2 = false
             })
-        },
+        },*/
         formatoFecha($data){
             return moment().format("DD-MM-YYYY", $data);
         },
@@ -128,7 +97,6 @@ export default {
             this.listarFacturas(page);
         },
         listarFacturas(page){
-            this.show = true
             this.axios.post('/admin/listarPlanillaDeLecturasPendientes?page='+page+'&DataBaseAlias='+this.DataBaseAlias+'&Plomero='+this.Plomero)
                 .then(res => {
                     if (res.data.status == 403){
@@ -136,19 +104,17 @@ export default {
                     }else{
                         this.pagination = res.data.values.pagination;
                         this.arrayFacturas = res.data.values.laGeneracionFactura.data;
-                        this.show = false
                     }
                 })
                 .catch(e => {
                     this.arrayFacturas = [];
-                    this.show = false
                 })
         },
     },
 
     created(){
-        this.WMGet_Lecturas_Pendientes()
         this.listarFacturas()
+        this.WMGet_Lecturas_Pendientes()
     },
 
     computed: {

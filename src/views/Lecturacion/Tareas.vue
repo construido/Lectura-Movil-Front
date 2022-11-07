@@ -9,7 +9,7 @@
                     <div class="d-grid gap-2">
                         <router-link class="btn btn-success btn-lg" :to="{name: 'LecturaPendiente'}"> LECTURAS PENDIENTES </router-link>
                         <router-link class="btn btn-success btn-lg" :to="{name: 'LecturaProcesada'}"> LECTURAS PROCESADAS </router-link>
-                        <router-link class="btn btn-success btn-lg" :to="{name: 'ServidorCelular'}"> OTROS </router-link>
+                        <router-link class="btn btn-success btn-lg" :to="{name: 'ServidorMovil'}"> OTROS </router-link>
                     </div>
 
                 </b-card>

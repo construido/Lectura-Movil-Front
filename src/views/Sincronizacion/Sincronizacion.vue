@@ -6,8 +6,8 @@
                     <b-card header="SINCRONIZACIÓN" header-tag="header" footer-text-variant="center">
                         
                         <div class="d-grid gap-2">
-                            <router-link class="btn btn-success btn-lg" :to="{name: 'ServidorCelular'}"> SERVIDOR A MÓVIL </router-link>
-                            <router-link class="btn btn-success btn-lg" :to="{name: 'CelularServidor'}"> MÓVIL A SERVIDOR </router-link>
+                            <router-link class="btn btn-success btn-lg" :to="{name: 'ServidorMovil'}"> SERVIDOR A MÓVIL </router-link>
+                            <router-link class="btn btn-success btn-lg" :to="{name: 'MovilServidor'}"> MÓVIL A SERVIDOR </router-link>
                             <router-link class="btn btn-success btn-lg" :to="{name: 'ServidorInspeccion'}"> INSPECCIÓN </router-link>
                             <router-link class="btn btn-success btn-lg" :to="{name: 'EnviarErrores'}"> ENVIAR ERRORES </router-link>
                         </div>

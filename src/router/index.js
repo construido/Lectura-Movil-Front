@@ -98,9 +98,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "servidorcelular" */ '../views/Sincronizacion/Sincronizacion.vue'),
   },
   {  
-    path: '/sincronizacion/servidorcelular',
-    name: 'ServidorCelular',
-    component: () => import(/* webpackChunkName: "servidorcelular" */ '../views/Sincronizacion/ServidorCelular/ServidorCelular.vue'),
+    path: '/sincronizacion/servidormovil',
+    name: 'ServidorMovil',
+    component: () => import(/* webpackChunkName: "servidormovil" */ '../views/Sincronizacion/ServidorMovil/ServidorMovil.vue'),
   },
   {
     path: '/sincronizacion/servidorinspeccion',
@@ -108,9 +108,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "servidorinspeccion" */ '../views/Sincronizacion/ServidorInspeccion/ServidorInspeccion.vue'),
   },
   {
-    path: '/sincronizacion/celularservidor',
-    name: 'CelularServidor',
-    component: () => import(/* webpackChunkName: "celularservidor" */ '../views/Sincronizacion/CelularServidor/CelularServidor.vue'),
+    path: '/sincronizacion/movilservidor',
+    name: 'MovilServidor',
+    component: () => import(/* webpackChunkName: "movilservidor" */ '../views/Sincronizacion/MovilServidor/MovilServidor.vue'),
   },
   {
     path: '/sincronizacion/enviarerrores',

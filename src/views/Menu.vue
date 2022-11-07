@@ -10,7 +10,7 @@
                         <router-link class="btn btn-success btn-lg" :to="{name: 'Tareas'}"> LECTURACIÓN </router-link>
                         <router-link class="btn btn-success btn-lg" :to="{name: 'LecturaInspeccion'}"> INSPECCIÓN </router-link>
                         <router-link class="btn btn-success btn-lg" :to="{name: 'Sincronizacion'}"> SINCRONIZACIÓN </router-link>
-                        <router-link class="btn btn-success btn-lg" :to="{name: 'CelularServidor'}"> EN SERVIDOR </router-link>
+                        <router-link class="btn btn-success btn-lg" :to="{name: 'MovilServidor'}"> EN SERVIDOR </router-link>
                         <router-link class="btn btn-success btn-lg" :to="{name: 'Anormalidades'}"> ANORMALIDADES DE MEDIDOR </router-link>
                     </div>
 
