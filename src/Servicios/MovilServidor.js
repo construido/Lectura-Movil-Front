@@ -13,7 +13,7 @@ export default {
 
     data() {
         return {
-            show2: false,
+            show: false,
             active: true,
             idPlanilla: [],
             arraryPlanillas : [],
@@ -23,9 +23,9 @@ export default {
             color : '',
             header : '',
             message : '',
+            showbtn : true,
 
             // datos de la nube
-            show: false,
             DataBaseAlias  : DataBaseAlias(),
             Plomero        : Plomero(),
             arrayFacturas: [],
@@ -45,47 +45,63 @@ export default {
         click(event){
             this.active = event
         },
+        showModal(color, header, message, status){
+            if(status == 1){
+                this.showbtn = false
+                this.color   = color
+                this.header  = header
+                this.message = message
+            }else if(status == 0){
+                this.showbtn = false
+                this.color   = color
+                this.header  = header
+                this.message = message
+            }else{
+                this.showbtn = true
+                this.color   = 'success'
+                this.header  = 'INFORMACIÓN'
+                this.message = 'Desea continuar..?'
+            }
+
+            this.$bvModal.show('modal-sincronizacion');
+        },
         WMGet_Lecturas_Pendientes(){
-            this.show2 = true
+            this.show = true
             this.axios.post('admin/WMGet_Lecturas_Pendientes')
             .then( res => {
                 this.arraryPlanillas = res.data
-                console.log(res.data)
-                this.show2 = false
+                this.show = false
             })
             .catch( err => {
                 console.log(err.response)
-                this.show2 = false
+                this.show = false
             })
         },
-        /*WMSincronizacionBDListDemo(){
-            this.show2 = true
-            this.axios.post('admin/WMSincronizacionBDListDemo', {
-                'GeneracionFactura' : this.idPlanilla
+        WMSincronizarCaS(){
+            this.show = true
+            this.$bvModal.hide('modal-sincronizacion')
+            this.axios.post('admin/WMSincronizarCaS', {
+                'Plomero' : this.Plomero,
+                'DataBaseAlias' : this.DataBaseAlias
             })
             .then( res => {
                 console.log(res.data)
-
                 if(res.data.status == 1) {
                     this.listarFacturas()
-                    this.color   = 'success'
-                    this.header  = res.data.message
-                    this.message = res.data.values
+                    this.showModal('success', res.data.message, res.data.values, res.data.status)
                 }
                 else{
-                    this.color   = 'danger'
-                    this.header  = res.data.message
-                    this.message = res.data.values
+                    this.showModal('danger', res.data.message, res.data.values, res.data.status)
                 }
 
-                this.show2 = false
+                this.show = false
                 this.$bvModal.show('modal-sincronizacion');
             })
             .catch( err => {
                 console.log(err.response)
-                this.show2 = false
+                this.show = false
             })
-        },*/
+        },
         formatoFecha($data){
             return moment().format("DD-MM-YYYY", $data);
         },
@@ -97,6 +113,7 @@ export default {
             this.listarFacturas(page);
         },
         listarFacturas(page){
+            this.show = true
             this.axios.post('/admin/listarPlanillaDeLecturasPendientes?page='+page+'&DataBaseAlias='+this.DataBaseAlias+'&Plomero='+this.Plomero)
                 .then(res => {
                     if (res.data.status == 403){
@@ -109,6 +126,7 @@ export default {
                 .catch(e => {
                     this.arrayFacturas = [];
                 })
+            this.show = false
         },
     },
 

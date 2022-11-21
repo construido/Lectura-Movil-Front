@@ -8,7 +8,7 @@
                     <h5> <b> Móvil a Servidor </b> </h5>
                     <h6> <b> {{ usuario }}</b> </h6>
                 </div>
-                <b-overlay :show="show2" class="d-inline-block">
+                <b-overlay :show="show" class="d-inline-block">
                     <div class="card-body">
                         <b-modal centered id="modal-sincronizacion">
                             <template #modal-header="{ close }">
@@ -20,11 +20,21 @@
                             </template>
 
                             <h5 class="text-black"> {{message}} </h5>
-
+                            
                             <template #modal-footer="{ cancel }">
-                                <b-button block :variant="'outline-'+color" @click="cancel()">
-                                    Aceptar
-                                </b-button>
+                                <div v-if="showbtn">
+                                    <b-button block variant="outline-success" class="mx-2" @click="WMSincronizarCaS()">
+                                        SÍ
+                                    </b-button>
+                                    <b-button block variant="outline-danger" @click="cancel()">
+                                        NO
+                                    </b-button>
+                                </div>
+                                <div v-else>
+                                    <b-button block :variant="'outline-'+color" @click="cancel()">
+                                        Aceptar
+                                    </b-button>
+                                </div>
                             </template>
                         </b-modal>
 
@@ -140,7 +150,7 @@
         <footer class="bg-light fixed-bottom">
             <div class="text-center p-3">
                 <div class="d-grid gap-2">
-                    <b-button variant="success" :hidden="!active"> Sincronizar </b-button>
+                    <b-button variant="success" @click="showModal()" :hidden="!active"> Sincronizar </b-button>
                     <b-button @click="$router.go(-1)" variant="danger"> Volver </b-button>
                 </div>
             </div>

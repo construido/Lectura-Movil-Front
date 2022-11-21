@@ -141,7 +141,7 @@
                         </tr>
                         <tr>
                             <td align="right"> <b>Desviacion:</b> </td>
-                            <td align="left"> {{PorcentajeDesviacionE}} </td>
+                            <td align="left"> {{ (Math.round((PorcentajeDesviacionE + Number.EPSILON) * 100) / 100) }} </td>
                         </tr>
                         <tr>
                             <td align="right"> <b>Tipo Consumo:</b> </td>

@@ -25,8 +25,7 @@ export default {
             message : '',
             showbtn : true,
 
-            // datos de la number
-            show: false,
+            // datos de la nube
             DataBaseAlias  : DataBaseAlias(),
             Plomero        : Plomero(),
             arrayFacturas: [],
@@ -76,8 +75,6 @@ export default {
             this.axios.post('admin/WMGet_Lecturas_Pendientes')
             .then( res => {
                 this.arraryPlanillas = res.data
-                //console.log(res.data)
-                //this.show = false
             })
             .catch( err => {
                 console.log(err.response)
@@ -97,20 +94,11 @@ export default {
                     this.listarFacturas()
                     this.idPlanilla = []
                     this.showModal('success', res.data.message, res.data.values, res.data.status)
-                    /*this.color   = 'success'
-                    this.header  = res.data.message
-                    this.message = res.data.values*/
                 }
                 else{
                     this.idPlanilla = []
-                    this.showModal('success', res.data.message, res.data.values, res.data.status)
-                    /*this.color   = 'danger'
-                    this.header  = res.data.message
-                    this.message = res.data.values*/
+                    this.showModal('danger', res.data.message, res.data.values, res.data.status)
                 }
-
-                //this.show = false
-                //this.$bvModal.show('modal-sincronizacion');
             })
             .catch( err => {
                 console.log(err.response)
