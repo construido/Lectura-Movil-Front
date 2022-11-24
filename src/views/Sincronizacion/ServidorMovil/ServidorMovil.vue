@@ -41,7 +41,7 @@
                         <b-tabs content-class="mt-2" pills fill>
                             <b-tab title="Servidor" active @click="click(true)">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-borderless table-sm caption-top">
+                                    <table class="table table-striped table-borderless table-sm caption-top" id="my-table">
                                         <thead class="sticky-header">
                                             <tr class="text-center bg-primary">
                                                 <th style="white-space:nowrap"></th>
@@ -51,7 +51,7 @@
                                                 <th style="white-space:nowrap">PEND</th>
                                             </tr>
                                         </thead>
-                                        <tbody v-for="(item, index) in arraryPlanillas" :key="item.id_genfact">
+                                        <tbody v-for="(item, index) in dataPage" :key="item.id_genfact">
                                             <tr>
                                                 <td style="white-space:nowrap" class="text-center">
                                                     <input class="form-check-input" type="checkbox" :value="item.id_genfact" v-model="idPlanilla">
@@ -76,6 +76,28 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <!-- INICIO DE LA PAGINACION -->
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item prev-item" @click.prevent="getPreviousPage()" v-if="pageAction > 1">
+                                            <a class="page-link" href="#">
+                                                <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
+                                            </a>
+                                        </li>
+
+                                        <li class="page-item" v-for="pagina in totalPaginas()" :key="pagina.item" aria-current="page"
+                                            @click.prevent="getDataPage(pagina)" v-bind:class="isActive(pagina)">
+                                            <a class="page-link" href="#">{{pagina}}</a>
+                                        </li>
+                                        
+                                        <li class="page-item next-item" @click.prevent="getNextPage()" v-if="pageAction < fin">
+                                            <a class="page-link" href="#">
+                                                <b-icon icon="arrow-right" aria-hidden="true"></b-icon>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <!-- FIN DE LA PAGINACION -->
                             </b-tab>
 
                             <b-tab title="Móvil" @click="click(false)">

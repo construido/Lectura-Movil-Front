@@ -25,6 +25,13 @@ export default {
             message : '',
             showbtn : true,
 
+            // paginación .NET
+            fin : 0,
+            perPage : 10,
+            dataPage : [],
+            pageAction : 1,
+            numbPage : 0,
+
             // datos de la nube
             DataBaseAlias  : DataBaseAlias(),
             Plomero        : Plomero(),
@@ -42,6 +49,59 @@ export default {
     },
 
     methods: {
+        // Paginación .NET
+        totalPaginas(){
+            //return Math.ceil(this.arraryPlanillas.length / this.perPage)
+            this.fin = Math.ceil(this.arraryPlanillas.length / this.perPage)
+            if(!this.fin) {
+                return [];
+            }
+            
+            var from = this.numbPage - this.offset
+            if(from < 1) {
+                from = 1;
+            }
+            
+            var to = from + (this.offset * 2); 
+            if(to >= this.fin){
+                to = this.fin;
+            }  
+            var pagesArray = [];
+            while(from <= to) {
+                pagesArray.push(from);
+                from++;
+            }
+            
+            return pagesArray;
+        },
+        getDataPage(pageNum){
+            let a = Math.ceil(this.arraryPlanillas.length / this.perPage)
+            if(pageNum <= a){
+                this.numbPage = pageNum
+                this.dataPage = []
+                this.pageAction = pageNum
+                let ini = (pageNum * this.perPage) - this.perPage
+                let fin = (pageNum * this.perPage)
+                this.dataPage = this.arraryPlanillas.slice(ini, fin)
+            }
+        },
+        getPreviousPage(){
+            if(this.pageAction > 1){
+                this.pageAction--
+            }
+            this.getDataPage(this.pageAction)
+        },
+        getNextPage(){
+            if(this.pageAction < this.totalPaginas()){
+                this.pageAction++
+            }
+            this.getDataPage(this.pageAction)
+        },
+        isActive(pageNum){
+            return pageNum == this.pageAction ? 'active' : ''
+        },
+        // Paginación .NET
+
         click(event){
             this.active = event
         },
@@ -70,6 +130,7 @@ export default {
             this.axios.post('admin/WMGet_Lecturas_Pendientes')
             .then( res => {
                 this.arraryPlanillas = res.data
+                this.getDataPage(1)
                 this.show = false
             })
             .catch( err => {

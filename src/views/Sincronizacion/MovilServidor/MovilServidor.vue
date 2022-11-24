@@ -116,7 +116,7 @@
                                                 <th style="white-space:nowrap">PEND</th>
                                             </tr>
                                         </thead>
-                                        <tbody v-for="(item, index) in arraryPlanillas" :key="item.id_genfact">
+                                        <tbody v-for="(item, index) in dataPage" :key="item.id_genfact">
                                             <tr>
                                                 <td v-b-toggle="'collapse' + index" style="white-space:nowrap" align="right"> {{ item.zonaruta }} </td>
                                                 <td v-b-toggle="'collapse' + index" style="white-space:nowrap" align="right"> {{ item.cobro }} </td>
@@ -138,9 +138,31 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <!-- INICIO DE LA PAGINACION -->
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item prev-item" @click.prevent="getPreviousPage()" v-if="pageAction > 1">
+                                            <a class="page-link" href="#">
+                                                <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
+                                            </a>
+                                        </li>
+
+                                        <li class="page-item" v-for="pagina in totalPaginas()" :key="pagina.item" aria-current="page"
+                                            @click.prevent="getDataPage(pagina)" v-bind:class="isActive(pagina)">
+                                            <a class="page-link" href="#">{{pagina}}</a>
+                                        </li>
+                                        
+                                        <li class="page-item next-item" @click.prevent="getNextPage()" v-if="pageAction < fin">
+                                            <a class="page-link" href="#">
+                                                <b-icon icon="arrow-right" aria-hidden="true"></b-icon>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <!-- FIN DE LA PAGINACION -->
                             </b-tab>
                         </b-tabs>
-
                     </div>
                 </b-overlay>
             </div>
