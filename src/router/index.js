@@ -122,6 +122,11 @@ const routes = [
     name: 'Anormalidades',
     component: () => import(/* webpackChunkName: "anormalidades" */ '../views/Anormalidades.vue'),
   },
+  {  
+    path: '/medidor',
+    name: 'Medidor',
+    component: () => import(/* webpackChunkName: "monitoreogps" */ '../views/Lecturacion/CorregirMedidor.vue'),
+  },
 ]
 
 const router = new VueRouter({
