@@ -32,7 +32,7 @@
                     <div class="form-floating">
                         <select class="form-control" v-model="marca">
                             <option selected disabled value="0"> Seleccione una marca </option>
-                            <option  v-for="item in arrayMarca" :key="item.value" :value="item.value"> {{item.text}} </option>
+                            <option  v-for="item in arrayMarca" :key="item.MarcaMedidor" :value="item.MarcaMedidor"> {{item.NombreMarcaMedidor}} </option>
                         </select>
                         <label for="tipo">Marca</label>
                     </div>
@@ -63,44 +63,4 @@
     </div>
 </template>
 
-<script>
-import NavBar from '@/components/NavBar.vue'
-
-export default {
-    name: 'LecturaInspeccion',
-
-    components:{
-        'NavBar': NavBar
-    },
-
-    data() {
-        return {
-            serie: '',
-            numero: '',
-            lec_act: '',
-
-            tipo: 0,
-            arrayTipo: [
-                {value: 1, text: 'Nuevo'},
-                {value: 2, text: 'El Mismo'},
-                {value: 3, text: 'Distinto'},
-                {value: 4, text: 'Otro'}
-            ],
-
-            estado: 0,
-            arrayEstado: [
-                {value: 1, text: 'Legible'},
-                {value: 2, text: 'Destruido'},
-                {value: 3, text: 'Sin Medidor'}
-            ],
-
-            marca: 0,
-            arrayMarca: [
-                {value: 1, text: 'LAO'},
-                {value: 2, text: 'ISI'},
-                {value: 3, text: 'EXT'}
-            ]
-        }
-    }
-}
-</script>
+<script src="@/Servicios/CorregirMedidor.js"></script>
