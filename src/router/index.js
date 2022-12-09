@@ -72,27 +72,33 @@ const routes = [
     component: () => import(/* webpackChunkName: "lecturacliente" */ '../views/Lecturacion/LecturaProcesada/ProcesadoCliente.vue'),
   },
   {
-    path: '/lecturacion/lecturapendiente',
-    name: 'LecturaPendiente',
-    component: () => import(/* webpackChunkName: "lecturapendiente" */ '../views/Lecturacion/LecturaPendiente/LecturaPendiente.vue'),
+    path: '/lecturacion/lecturarplanillas',
+    name: 'LecturarPlanillas',
+    component: () => import(/* webpackChunkName: "lecturapendiente" */ '../views/Lecturacion/Lecturar/LecturarPlanillas.vue'),
   },
   {
-    path: '/lecturacion/clientependiente/:GeneracionFactura',
-    name: 'ClientePendiente',
-    component: () => import(/* webpackChunkName: "clientependiente" */ '../views/Lecturacion/LecturaPendiente/ClientePendiente.vue'),
+    path: '/lecturacion/clientesalecturar/:GeneracionFactura',
+    name: 'ClientesALecturar',
+    component: () => import(/* webpackChunkName: "clientependiente" */ '../views/Lecturacion/Lecturar/ClientesALecturar.vue'),
   },
   {
     path: '/lecturacion/lecturacliente/:GeneracionFactura/:Cliente',
     name: 'LecturaCliente',
-    component: () => import(/* webpackChunkName: "lecturacliente" */ '../views/Lecturacion/LecturaPendiente/LecturaCliente.vue'),
+    component: () => import(/* webpackChunkName: "lecturacliente" */ '../views/Lecturacion/Lecturar/LecturaCliente.vue'),
   },
   {
     path: '/lecturacion/lecturainspeccion',
     name: 'LecturaInspeccion',
     component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaInspeccion/LecturaInspeccion.vue'),
-  }, // ************************************* NAVBAR DE SINCRONIZACION *****************************************
-     // ********************************************************************************************************
-    {  
+  },
+  {
+    path: '/lecturacion/planillaspendientes',
+    name: 'PlanillasPendientes',
+    component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaPendiente/PlanillasPendientes.vue'),
+  }, 
+    // ************************************* NAVBAR DE SINCRONIZACION *****************************************
+    // ********************************************************************************************************
+  {
     path: '/sincronizacion',
     name: 'Sincronizacion',
     component: () => import(/* webpackChunkName: "servidorcelular" */ '../views/Sincronizacion/Sincronizacion.vue'),

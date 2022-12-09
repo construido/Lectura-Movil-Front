@@ -6,6 +6,15 @@ export default {
 
     data() {
         return {
+            // Buscar Cliente
+            tipoC: 'Ubicacion',
+            dato: '',
+            objetoCliente: '',
+            zona: '',
+            ruta: '',
+            showMessage: false,
+            messageCliente: 'Cliente no encontrado',
+
             // LogalStorage
             DataBaseAlias: DataBaseAlias(),
             EmpresaNombre: EmpresaNombre(),
@@ -37,6 +46,7 @@ export default {
 
             show: true,
             show2: false,
+            show3: false,
             tipoConsumoVerificar: '',
 
             // OBTENER ERRORES DE LA LECTURA
@@ -146,6 +156,36 @@ export default {
     },
 
     methods: {
+        modalCliente(){ // TODO: se le implemento la variable "dato" que recibe del formulario
+            this.$bvModal.show('modal-buscar');
+        },
+        buscarCliente(){
+            this.show3 = true;
+            this.axios.post('/admin/buscarCliente', {
+                'tcGeneracionFactura' : this.id,
+                'dato'                : this.dato,
+                'tipo'                : this.tipoC,
+                'DataBaseAlias'       : this.DataBaseAlias
+            })
+            .then(res => {
+                if (res.data.status == 403){
+                    SessionExpirada();
+                }else{
+                    this.arrayCliente = res.data.values;
+                    if(this.arrayCliente.length > 0){
+                        this.cargarCliente()
+                        this.showMessage = false
+                        console.log(res.data)
+                    }else{
+                        this.showMessage = true
+                        this.show3 = false
+                    }
+                }
+            })
+            .catch(e => {
+                console.log(e.response)
+            })
+        },
         habilitarImpresora(){
             if(this.HI == 'danger'){
                 localStorage.setItem('HIDANGER', 'success')
@@ -391,6 +431,10 @@ export default {
                         SessionExpirada();
                     }else{
                         this.arrayCliente = res.data.values;
+                        console.log(this.arrayCliente[0].CodigoUbicacion)
+                        let cadena = this.arrayCliente[0].CodigoUbicacion
+                        this.zona = cadena.substr(0, 2)
+                        this.ruta = cadena.substr(2, 2)
                         this.cargarValores();
                     }
                 })
@@ -420,16 +464,49 @@ export default {
                     this.show = false;
                 })
         },
+        cargarCliente(){
+            this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
+            this.media           = this.arrayCliente[0].Media;
+            this.lecturaAnterior = this.arrayCliente[0].LecturaAnterior;
+            this.nombreCliente   = this.arrayCliente[0].Nombre;
+            this.corte           = this.arrayCliente[0].Corte ? 'Sí' : 'No';
+            this.id              = this.arrayCliente[0].GeneracionFactura;
+            this.cli             = this.arrayCliente[0].Cliente;
+            this.medidor         = this.arrayCliente[0].Medidor;
+            this.lecturaActual   = this.arrayCliente[0].LecturaActual == "0" ? '' : this.arrayCliente[0].LecturaActual;
+            this.categoria       = this.arrayCliente[0].Categoria;
+            this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
+
+            if(this.arrayCliente[0].NombreTC != null){
+                this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+            }
+
+            if(this.arrayCliente[0].N2 != null){
+                this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
+            }
+
+            if(this.medidor == 0)
+                this.conMedidor = false;
+            else
+                this.conMedidor = true;
+
+            this.show3 = false;
+            this.$bvModal.hide('modal-buscar');
+        },
         cargarValoresNext(){
             this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
             this.media           = this.arrayCliente[0].Media;
             this.lecturaAnterior = this.arrayCliente[0].LecturaAnterior;
             this.nombreCliente   = this.arrayCliente[0].Nombre;
-            this.corte           = this.arrayCliente[0].Corte;
+            this.corte           = this.arrayCliente[0].Corte ? 'Sí' : 'No';
             this.id              = this.arrayCliente[0].GeneracionFactura;
             this.cli             = this.arrayCliente[0].Cliente;
             this.anormalidad     = 'Sin Anormalidad - - 0',
             this.anormalidadCorrecta = 0,
+            this.categoria       = this.arrayCliente[0].Categoria; // TODO: hacer seguimiento
+            this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
 
             this.medidor         = this.arrayCliente[0].Medidor;
 
@@ -445,9 +522,10 @@ export default {
             this.media           = this.arrayCliente[0].Media;
             this.lecturaAnterior = this.arrayCliente[0].LecturaAnterior;
             this.nombreCliente   = this.arrayCliente[0].Nombre;
-            this.corte           = this.arrayCliente[0].Corte;
+            this.corte           = this.arrayCliente[0].Corte ? 'Sí' : 'No';
             this.medidor         = this.arrayCliente[0].Medidor;
             this.categoria       = this.arrayCliente[0].Categoria;
+            this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
 
             if(this.medidor == 0)
                 this.conMedidor = false;

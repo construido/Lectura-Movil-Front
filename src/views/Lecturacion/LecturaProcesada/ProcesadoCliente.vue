@@ -7,7 +7,11 @@
                 <div class="card-header">
                     <div class="col-xl-6">
                         <div class="text-center">
-                            <h5> <b> Lecturación [{{lecturados}}/{{pendientes}}]</b>  </h5>
+                            <h5>
+                                <!-- <b> Lecturación [{{lecturados}}/{{pendientes}}]</b> -->
+                                <label class="mx-3"> <b> Lecturación [{{lecturados}}/{{pendientes}}] </b> </label>
+                                <b-button variant="primary"><b-icon icon="search" @click="modalCliente()"></b-icon></b-button>
+                            </h5>
                         </div>
                     </div>
                 </div>
@@ -15,15 +19,8 @@
                     <div class="card-body">
                         <b> Código Ubicación: </b> {{ codigoUbicacion }} <br>
                         <b> Nombre: </b> {{ nombreCliente }} <br>
-
-                        <b> Media: </b> {{ media }} <br>
-
-                        <div v-if="corte==0">
-                            <b> Corte: </b> No
-                        </div>
-                        <div v-else>
-                            <b> Corte: </b> Sí
-                        </div>
+                        <b> Media: </b> {{ Math.ceil(media) }} <label for="media" class="mx-4"> <b> Corte: </b> {{corte}} </label> <br>
+                        <b> Categoria: </b> {{ NombreCategoria }} <br>
 
                         <div v-if="conMedidor == true">
                             <div class="form-floating">
@@ -36,11 +33,6 @@
                                 <label for="lecturaactual">Lectura Actual:</label>
                                 <span v-if="camposObligatorios.tcLecturaActual" v-text="camposObligatorios.tcLecturaActual[0]" class="text-danger"></span>
                             </div>
-
-                            <!--<b-input-group class="my-sm-0">
-                                <b-form-input readonly type="text" placeholder="CodUbi - Cliente - Nombre" v-model="anormalidad"></b-form-input>
-                                <b-button @click="modalAnormalidad" variant="primary"><b-icon icon="search"></b-icon></b-button>
-                            </b-input-group>-->
 
                             <div>
                                 <b-card no-body>
@@ -331,6 +323,47 @@
             </template>
         </b-modal>
         <!-- FIN - MODAL ANORMALIDADES -->
+
+        <!-- INICIO - MODAL ANORMALIDADES -->
+        <b-modal centered id="modal-buscar">
+            <template hidden #modal-header="{ close }">
+                <b-button hidden variant="outline-danger" @click="close()">
+                    Cerrar
+                </b-button>
+
+                <h5 class="text-black">Buscar Cliente</h5>
+            </template>
+            
+            <!-- Buscador - INICIO -->
+            <div v-if="showMessage == true">
+                <b>{{messageCliente}}</b>
+            </div>
+            <select class="form-select my-2" v-model="tipoC">
+                <!-- <option value="Nombre">Buscar por: Nombre Cliente</option> -->
+                <option value="Codigo">Buscar por: Código Cliente</option>
+                <option value="Ubicacion">Buscar por: Código Ubicación ({{ zona }}{{ ruta }})</option>
+                <!-- <option value="UbicacionOtro">Buscar por: Código Ubicación (otro)</option> -->
+            </select>
+
+            <b-input-group class="my-sm-0">
+                <b-button variant="info"><b-icon icon="search" @click="buscarCliente()"></b-icon></b-button>
+                <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="dato"></b-form-input>
+                <b-button variant="danger"><b-icon icon="x" aria-hidden="true" @click="dato = ''"></b-icon></b-button>
+            </b-input-group>
+            <!-- Buscador - FIN -->
+                
+            <b-overlay :show="show3" no-wrap></b-overlay>
+
+            <template #modal-footer="{ cancel }">
+                <b-button hidden block variant="outline-success" @click="ok()">
+                    Seleccionar
+                </b-button>
+
+                <b-button variant="danger" @click="cancel()">
+                    Cancelar
+                </b-button>
+            </template>
+        </b-modal>
         
          <!-- <div>
             <h1>Mis Coordenadas</h1>

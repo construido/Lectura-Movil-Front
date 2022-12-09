@@ -95,7 +95,7 @@ export default {
                 })
         },
         listarClientes(id){
-          this.$router.push('/lecturacion/clientependiente/'+id)
+          this.$router.push('/lecturacion/clientesalecturar/'+id)
         },
     },
 }

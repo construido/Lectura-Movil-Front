@@ -7,7 +7,8 @@
                 <b-card header="TAREAS" header-tag="header" :footer="fecha" footer-text-variant="center">
                     
                     <div class="d-grid gap-2">
-                        <router-link class="btn btn-success btn-lg" :to="{name: 'LecturaPendiente'}"> LECTURAS PENDIENTES </router-link>
+                        <router-link class="btn btn-success btn-lg" :to="{name: 'LecturarPlanillas'}"> LECTURAR </router-link>
+                        <router-link class="btn btn-success btn-lg" :to="{name: 'PlanillasPendientes'}"> LECTURAS PENDIENTES </router-link>
                         <router-link class="btn btn-success btn-lg" :to="{name: 'LecturaProcesada'}"> LECTURAS PROCESADAS </router-link>
                         <router-link class="btn btn-success btn-lg" :to="{name: 'Medidor'}"> CORREGIR MEDIDOR </router-link>
                     </div>
