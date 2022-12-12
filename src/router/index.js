@@ -96,6 +96,16 @@ const routes = [
     name: 'PlanillasPendientes',
     component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaPendiente/PlanillasPendientes.vue'),
   }, 
+  {
+    path: '/lecturacion/clientespendientes/:GeneracionFactura',
+    name: 'ClientesPendientes',
+    component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaPendiente/ClientesPendientes.vue'),
+  }, 
+  {
+    path: '/lecturacion/clientependiente/:GeneracionFactura/:Cliente',
+    name: 'ClientePendiente',
+    component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaPendiente/ClientePendiente.vue'),
+  }, 
     // ************************************* NAVBAR DE SINCRONIZACION *****************************************
     // ********************************************************************************************************
   {

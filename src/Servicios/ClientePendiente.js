@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar.vue'
-import {SessionExpirada, DataBaseAlias, Plomero, EmpresaNombre, HIDANGER, HGDANGER} from '@/Servicios/ControlErrores'
+import {SessionExpirada, DataBaseAlias, Plomero, EmpresaNombre} from './ControlErrores'
 
 export default {
     name: 'LecturaCliente',
@@ -16,13 +16,9 @@ export default {
             messageCliente: 'Cliente no encontrado',
 
             // LogalStorage
-            DataBaseAlias: DataBaseAlias(),
             EmpresaNombre: EmpresaNombre(),
+            DataBaseAlias: DataBaseAlias(),
             Plomero      : Plomero(),
-
-            // Habilitar y Desabilitar Impresora y GPS
-            HI: HIDANGER(),
-            HG: HGDANGER(),
 
             camposObligatorios: [],
             arrayCliente: [],
@@ -75,12 +71,11 @@ export default {
             codigoUbicacion: '',
             nombreCliente: '',
             media: '',
-            cobro: '',
             medidor: '',
             categoria: '',
             corte: '',
             lecturaAnterior: '',
-            llNuevaLectura: true,
+            llNuevaLectura: false,
             conMedidor: true,
 
             // PAGINACIÓN
@@ -104,7 +99,6 @@ export default {
 
             disable: '',
             mostrar: false,
-            animations: 'none',
             messageAlerta: '',
 
             // Datos Factura
@@ -173,7 +167,8 @@ export default {
                 }else{
                     this.arrayCliente = res.data.values;
                     if(this.arrayCliente.length > 0){
-                        this.cargarCliente()
+                        // this.cargarCliente()
+                        this.cargarValoresNext()
                         this.showMessage = false
                         console.log(res.data)
                     }else{
@@ -185,26 +180,6 @@ export default {
             .catch(e => {
                 console.log(e.response)
             })
-        },
-        habilitarImpresora(){
-            if(this.HI == 'danger'){
-                localStorage.setItem('HIDANGER', 'success')
-                this.HI = HIDANGER()
-            }
-            else{
-                localStorage.setItem('HIDANGER', 'danger')
-                this.HI = HIDANGER()
-            }
-        },
-        habilitarGPS(){
-            if(this.HG == 'danger'){
-                localStorage.setItem('HGDANGER', 'success')
-                this.HG = HGDANGER()
-            }
-            else{
-                localStorage.setItem('HGDANGER', 'danger')
-                this.HG = HGDANGER()
-            }
         },
         mostrarBtn(){
             this.mostrar = true;
@@ -229,6 +204,9 @@ export default {
         cargarAnormalidad(objeto){ // TODO: se modificó e implementó un if para la selección de anormalidades
             let nombre = objeto.Nombre;
             nombre = nombre != null ? nombre : '';
+
+            /*this.anormalidad = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
+            this.anormalidadCorrecta = objeto.MedidorAnormalidad;*/
 
             if(this.anormalidadSelect == 1){
                 this.anormalidad = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
@@ -267,6 +245,33 @@ export default {
             // this.X = parseInt(valor.getBoundingClientRect().x)
             // this.Y = parseInt(valor.getBoundingClientRect().y)
             // window.scrollTo(this.X, this.Y);
+        },
+        ok(){
+            alert('Hola');
+        },
+        controlErrores(error){
+
+          var array = [];
+
+          if (error.response.status == 422) {
+            array = error.response.data.errors
+          }
+
+          return array;
+
+        },
+        llenarCampoErrores(){
+            this.CategoriaE            = this.arrayErrores.Categoria;
+            this.ConsumoActualE        = this.arrayErrores.ConsumoActual;
+            this.LecturaActualE        = this.arrayErrores.LecturaActual;
+            this.LecturaAnteriorE      = this.arrayErrores.LecturaAnterior;
+            this.MediaE                = Math.ceil(this.arrayErrores.Media);
+            this.MedidorMarcaE         = this.arrayErrores.MedidorMarca;
+            this.MedidorNumeroE        = this.arrayErrores.MedidorNumero;
+            this.MedidorSerieE         = this.arrayErrores.MedidorSerie;
+            this.PorcentajeDesviacionE = this.arrayErrores.PorcentajeDesviacion;
+            this.TipoConsumoE          = this.arrayErrores.TipoConsumo;
+            this.FinMedidorE           = this.arrayErrores.FinMedidor;
         },
         DatosFactura(id, cli){
             this.idFactura = id;
@@ -311,30 +316,6 @@ export default {
             this.limpiarCampos();
             this.obtenerClienteNext(this.id, this.DataBaseAlias);
         },
-        controlErrores(error){
-
-          var array = [];
-
-          if (error.response.status == 422) {
-            array = error.response.data.errors
-          }
-
-          return array;
-
-        },
-        llenarCampoErrores(){
-            this.CategoriaE            = this.arrayErrores.Categoria;
-            this.ConsumoActualE        = this.arrayErrores.ConsumoActual;
-            this.LecturaActualE        = this.arrayErrores.LecturaActual;
-            this.LecturaAnteriorE      = this.arrayErrores.LecturaAnterior;
-            this.MediaE                = Math.ceil(this.arrayErrores.Media);
-            this.MedidorMarcaE         = this.arrayErrores.MedidorMarca;
-            this.MedidorNumeroE        = this.arrayErrores.MedidorNumero;
-            this.MedidorSerieE         = this.arrayErrores.MedidorSerie;
-            this.PorcentajeDesviacionE = this.arrayErrores.PorcentajeDesviacion;
-            this.TipoConsumoE          = this.arrayErrores.TipoConsumo;
-            this.FinMedidorE           = this.arrayErrores.FinMedidor;
-        },
         guardarLectura(){
             this.show = true;
             let indice = this.imageEnviar.length;
@@ -363,6 +344,8 @@ export default {
             formData.append('tnCodigoUbicacion', this.arrayCliente[0].CodigoUbicacion);
 
             this.axios.post('/admin/DO_LecturarNormal', formData).then(res => {
+                console.log(res.data);
+
                 if (res.data.values.Error == 2000 || this.conMedidor == false) {
                     this.valido = 0;
                     this.lecturaActual = '';
@@ -372,7 +355,6 @@ export default {
                     this.anormalidadCorrecta2 = 0,  // TODO:
                     this.$bvModal.show('modal-seguir');
                     this.DatosFactura(this.id, this.cli);
-                    this.lecturados = parseInt(this.lecturados) + 1;
                     let input = document.getElementById("file");
                     input.value = ''
                     this.show = false;
@@ -382,9 +364,10 @@ export default {
                     this.show = false;
                     this.$bvModal.show('modal-scoped');
                 }
+
             }).catch(e => {
-                console.log(e)
-                this.show = false;
+                console.log(e.response);
+                // this.camposObligatorios = this.controlErrores(e);
             })
         },
         obtenerUbicacion() {
@@ -401,7 +384,6 @@ export default {
                 );
             }else alert("Lo siento, tu navegador no tiene soporte para obtener tu ubicación")
         },
-        // obtención de imagenes INICIO
         obtenerImagen(e) {
             var files = e.target.files || e.dataTransfer.files;
             this.imageEnviar = files;
@@ -410,22 +392,20 @@ export default {
         },
         listarAnormalidad(page){
             this.show2 = true;
-            this.animations = 'spin-pulse';
             this.axios.post('/admin/llenarSelectAnormalidad?page='+page+'&tcDataBaseAlias='+this.DataBaseAlias+'&tcOrden='+this.orden+'&tcTipo='+this.tipo+'&tcDato='+this.dato)
                 .then(res => {
                     this.pagination = res.data.values.pagination;
                     this.arrayAnormalidades = res.data.values.laMedidorAnormalidad.data;
                     this.mostrar = !this.mostrar;
                     this.show2 = false;
-                    this.animations = 'none';
                 })
                 .catch(e => {
-                    this.arrayAnormalidades = [];
-                    this.show2 = false;
+                    this.sizes = [];
+                    console.log(e.response);
                 })
         },
         obtenerCliente(id, cli, DataBaseAlias){
-            this.axios.post('/admin/verLecturaId?tcGeneracionFactura='+id+'&tcCliente='+cli+'&DataBaseAlias='+DataBaseAlias)
+            this.axios.post('/admin/verLecturaIdProcesada?tcGeneracionFactura='+id+'&tcCliente='+cli+'&DataBaseAlias='+DataBaseAlias)
                 .then(res => {
                     if (res.data.status == 403){
                         SessionExpirada();
@@ -439,17 +419,17 @@ export default {
                     }
                 })
                 .catch(e => {
-                    console.log(e.response);
+                    this.show = false;
                 })
         },
         obtenerClienteNext(id, DataBaseAlias){
             this.show = true;
-            this.axios.post('/admin/verLecturaIdNext?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias)
+            this.axios.post('/admin/verLecturaIdNextProcesada?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias+'&CodigoUbicacion='+this.codigoUbicacion)
                 .then(res => {
                     if (res.data.status == 403){
                         SessionExpirada();
                     }else{
-                        if (res.data.values.length == 0){
+                        if (res.data.values.length == 0) {
                             this.$bvModal.show('modal-sin-cliente');
                         }else{
                             this.arrayCliente = res.data.values;
@@ -459,12 +439,42 @@ export default {
                     }
                 })
                 .catch(e => {
-                    this.arrayAnormalidades = [];
                     console.log(e.response);
                     this.show = false;
                 })
         },
-        cargarCliente(){
+        // cargarCliente(){
+        //     this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
+        //     this.media           = this.arrayCliente[0].Media;
+        //     this.lecturaAnterior = this.arrayCliente[0].LecturaAnterior;
+        //     this.nombreCliente   = this.arrayCliente[0].Nombre;
+        //     this.corte           = this.arrayCliente[0].Corte ? 'Sí' : 'No';
+        //     this.id              = this.arrayCliente[0].GeneracionFactura;
+        //     this.cli             = this.arrayCliente[0].Cliente;
+        //     this.medidor         = this.arrayCliente[0].Medidor;
+        //     this.lecturaActual   = this.arrayCliente[0].LecturaActual == "0" ? '' : this.arrayCliente[0].LecturaActual;
+        //     this.categoria       = this.arrayCliente[0].Categoria;
+        //     this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
+
+        //     if(this.arrayCliente[0].NombreTC != null){
+        //         this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
+        //         this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+        //     }
+
+        //     if(this.arrayCliente[0].N2 != null){
+        //         this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
+        //         this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
+        //     }
+
+        //     if(this.medidor == 0)
+        //         this.conMedidor = false;
+        //     else
+        //         this.conMedidor = true;
+
+        //     this.show3 = false;
+        //     this.$bvModal.hide('modal-buscar');
+        // },
+        cargarValoresNext(){
             this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
             this.media           = this.arrayCliente[0].Media;
             this.lecturaAnterior = this.arrayCliente[0].LecturaAnterior;
@@ -473,7 +483,7 @@ export default {
             this.id              = this.arrayCliente[0].GeneracionFactura;
             this.cli             = this.arrayCliente[0].Cliente;
             this.medidor         = this.arrayCliente[0].Medidor;
-            this.lecturaActual   = this.arrayCliente[0].LecturaActual == "0" ? '' : this.arrayCliente[0].LecturaActual;
+            this.lecturaActual   = this.arrayCliente[0].LecturaActual;
             this.categoria       = this.arrayCliente[0].Categoria;
             this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
 
@@ -492,30 +502,9 @@ export default {
             else
                 this.conMedidor = true;
 
-            this.show3 = false;
+            this.show           = false;
+            this.show3          = false;
             this.$bvModal.hide('modal-buscar');
-        },
-        cargarValoresNext(){
-            this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
-            this.media           = this.arrayCliente[0].Media;
-            this.lecturaAnterior = this.arrayCliente[0].LecturaAnterior;
-            this.nombreCliente   = this.arrayCliente[0].Nombre;
-            this.corte           = this.arrayCliente[0].Corte ? 'Sí' : 'No';
-            this.id              = this.arrayCliente[0].GeneracionFactura;
-            this.cli             = this.arrayCliente[0].Cliente;
-            this.anormalidad     = 'Sin Anormalidad - - 0',
-            this.anormalidadCorrecta = 0,
-            this.categoria       = this.arrayCliente[0].Categoria; // TODO: hacer seguimiento
-            this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
-
-            this.medidor         = this.arrayCliente[0].Medidor;
-
-            if(this.medidor == 0)
-                this.conMedidor = false;
-            else
-                this.conMedidor = true;
-
-            this.show            = false;
         },
         cargarValores(){
             this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
@@ -525,13 +514,24 @@ export default {
             this.corte           = this.arrayCliente[0].Corte ? 'Sí' : 'No';
             this.medidor         = this.arrayCliente[0].Medidor;
             this.categoria       = this.arrayCliente[0].Categoria;
+            this.lecturaActual   = this.arrayCliente[0].LecturaActual;
             this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
+
+            if(this.arrayCliente[0].NombreTC != null){
+                this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+            }
+
+            if(this.arrayCliente[0].N2 != null){
+                this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
+            }
 
             if(this.medidor == 0)
                 this.conMedidor = false;
             else
                 this.conMedidor = true;
-
+            
             this.show = false;
         },
     },
