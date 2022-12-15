@@ -11,10 +11,11 @@ export default {
             EmpresaNombre: EmpresaNombre(),
             Plomero      : Plomero(),
 
+            id: '',
             arrayLecturas: [],
             arrayLecturasPendientes: [],
             buscar: '',
-            id: '',
+            dato: '',
             tipo: 'LecturaPendiente',
             lecturados: '',
             pendientes: '',
@@ -24,7 +25,6 @@ export default {
             nombreAlias: '',
             messageAlerta: '',
 
-            dato: '',
             dato2: '',
             mostrar: false,
             orden: 'top10',
@@ -65,12 +65,21 @@ export default {
 
     created() {
         this.id = this.$route.params.GeneracionFactura;
-        this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
+        // this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
+        this.buscar = localStorage.getItem('Buscar') ? localStorage.getItem('Buscar') : ''
+        this.dato   = localStorage.getItem('Dato') ? localStorage.getItem('Dato') : ''
+        this.tipo   = localStorage.getItem('Tipo') ? localStorage.getItem('Tipo') : 'LecturaPendiente',
         this.listarAnormalidad(1)
         this.listarLecturas();
     },
 
     methods: {
+        atras(){
+            localStorage.removeItem('Tipo');
+            localStorage.removeItem('Dato');
+            localStorage.removeItem('Buscar');
+            this.$router.go(-1)
+        },
         limpiarCampos(){
             this.dato2  = '';
             this.mostrar = true;
@@ -116,8 +125,11 @@ export default {
             this.pagination2.current_page = page;
             this.listarAnormalidad(page);
         },
-        lecturarCliente(id, cli){
-          this.$router.push('/lecturacion/clientependiente/'+id+'/'+cli)
+        lecturarCliente(id, cli, anor){
+            localStorage.setItem('Tipo', this.tipo)
+            localStorage.setItem('Dato', this.dato)
+            localStorage.setItem('Buscar', this.buscar)
+            this.$router.push('/lecturacion/clientependiente/'+id+'/'+cli+'/'+anor)
         },
         RecalcularFactura(GeneracionFactura, Cliente){
             this.show = true;
@@ -155,24 +167,30 @@ export default {
             })
         },
         lecturasPendientesLecturados(id, DataBaseAlias){
-            this.axios.post('/admin/lecturasPendientesLecturados?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias)
-                .then(res => {
-                    if (res.data.status == 403){
-                        SessionExpirada();
-                    }else{
-                        this.arrayLecturasPendientes = res.data.values;
-                        this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
-                        this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
-                    }
-                })
-                .catch(e => {
-                    this.arrayLecturasPendientes = [];
-                    this.lecturados = 0;
-                    this.pendientes = 0;
-                })
+            this.axios.post('/admin/lecturasPendientesAnormalidades', {
+                'tcGeneracionFactura' : id,
+                'tcTipo'              : this.tipo,
+                'Anormalidad'         : this.dato,
+                'DataBaseAlias'       : DataBaseAlias
+            })
+            .then(res => {
+                if (res.data.status == 403){
+                    SessionExpirada();
+                }else{
+                    this.arrayLecturasPendientes = res.data.values;
+                    this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
+                    this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
+                }
+            })
+            .catch(e => {
+                this.arrayLecturasPendientes = [];
+                this.lecturados = 0;
+                this.pendientes = 0;
+            })
         },
         listarLecturas(page){
             this.show = true;
+            this.lecturasPendientesLecturados(this.id, this.DataBaseAlias)
             this.axios.post('/admin/listarPendientes?page='+page+'&tcGeneracionFactura='+this.id+'&dato='+this.dato+'&tipo='+this.tipo+'&DataBaseAlias='+this.DataBaseAlias)
                 .then(res => {
                     if (res.data.status == 403){
@@ -180,6 +198,7 @@ export default {
                     }else{
                         this.arrayLecturas = res.data.values.generacionLectura.data;
                         this.pagination    = res.data.values.pagination;
+                        // this.lecturasPendientesLecturados(this.id, this.DataBaseAlias)
 
                         if (res.data.values.generacionLectura.data.length > 0) {
                             this.zona = this.arrayLecturas[0].Zona;

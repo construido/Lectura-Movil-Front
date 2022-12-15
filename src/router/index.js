@@ -102,7 +102,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaPendiente/ClientesPendientes.vue'),
   }, 
   {
-    path: '/lecturacion/clientependiente/:GeneracionFactura/:Cliente',
+    path: '/lecturacion/clientependiente/:GeneracionFactura/:Cliente/:Anormalidad',
     name: 'ClientePendiente',
     component: () => import(/* webpackChunkName: "lecturainspeccion" */ '../views/Lecturacion/LecturaPendiente/ClientePendiente.vue'),
   }, 

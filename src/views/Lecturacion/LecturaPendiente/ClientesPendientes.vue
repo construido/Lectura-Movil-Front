@@ -52,8 +52,8 @@
         <div class="container my-2">
             <div class="card">
                 <div class="card-header text-center sticky-header">
-                    <h5> <b> Lecturas Procesadas [{{lecturados}}/{{pendientes}}] </b> </h5>
-                    <!-- <h6> <b> ZonaRuta: {{ zona }}{{ ruta }} </b> </h6> -->
+                    <h5> <b> Lecturas Pendientes [{{lecturados}}/{{pendientes}}] </b> </h5>
+                    <h6> <b> ZonaRuta: {{ zona }}{{ ruta }} </b> </h6>
                 </div>
                 <b-overlay :show="show" class="d-inline-block">
                     <div class="card-body" v-if="arrayLecturas.length > 0">
@@ -72,7 +72,7 @@
                                     <tr>
                                         <td style="white-space:nowrap" class="text-center">
                                             <b-button title="Editar Usuario" class="btn btn-success btn-sm mx-1" 
-                                                @click="lecturarCliente(item.GeneracionFactura, item.Cliente)"> 
+                                                @click="lecturarCliente(item.GeneracionFactura, item.Cliente, item.MedidorAnormalidad)"> 
                                                 <b-icon icon="arrow-right-square" aria-hidden="true"></b-icon> 
                                             </b-button>
                                             <b-button v-b-toggle="'collapse' + index" title="Ver más" class="btn-sm mx-1" variant="primary" >
@@ -267,7 +267,17 @@
         </b-modal>
         <!-- FIN - MODAL ANORMALIDADES -->
 
-        <BtnAtras></BtnAtras>
+        <!-- <BtnAtras></BtnAtras> -->
+        <footer class="bg-light fixed-bottom">
+            <!-- Copyright -->
+            <div class="text-center p-3">
+                <div class="d-grid gap-2">
+                    <b-button @click="atras()" variant="danger"> Volver </b-button>
+                </div>
+            </div>
+            <!-- Copyright -->
+        </footer>
+
     </div>
 </template>
 

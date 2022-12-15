@@ -7,6 +7,9 @@ function SessionExpirada(){
     localStorage.removeItem('DataBaseAlias');
     localStorage.removeItem('Plomero');
     localStorage.removeItem('Empresa');
+    localStorage.removeItem('Tipo');
+    localStorage.removeItem('Dato');
+    localStorage.removeItem('Buscar');
     window.location.href = '/';
 }
 

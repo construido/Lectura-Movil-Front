@@ -9,7 +9,8 @@
                         <div class="text-center">
                             <h5>
                                 <!-- <b> Lecturación [{{lecturados}}/{{pendientes}}]</b> -->
-                                <label class="mx-3"> <b> Lecturación [{{lecturados}}/{{pendientes}}] </b> </label>
+                                <!-- <label class="mx-3"> <b> Lecturación [{{lecturados}}/{{pendientes}}] </b> </label> -->
+                                <label class="mx-3"> <b> Lecturación </b> </label>
                                 <b-button variant="primary"><b-icon icon="search" @click="modalCliente()"></b-icon></b-button>
                             </h5>
                         </div>

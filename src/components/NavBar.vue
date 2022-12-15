@@ -239,6 +239,9 @@ export default {
                 localStorage.removeItem('DataBaseAlias');
                 localStorage.removeItem('Plomero');
                 localStorage.removeItem('Empresa');
+                localStorage.removeItem('Tipo');
+                localStorage.removeItem('Dato');
+                localStorage.removeItem('Buscar');
                 this.show2 = false;
                 this.$bvModal.hide('modal-cerrar-session');
                 this.$router.push('/');

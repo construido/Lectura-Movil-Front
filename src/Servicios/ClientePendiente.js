@@ -38,6 +38,7 @@ export default {
             anormalidadCorrecta2: 0, // TODO: nueva variable implementada 06-10-2022 para la nueva anormalidad
             id: '',
             cli: '',
+            medAnor: '',
             lecturaActual: '',
 
             show: true,
@@ -116,8 +117,9 @@ export default {
     created(){
         this.id = this.$route.params.GeneracionFactura;
         this.cli = this.$route.params.Cliente;
-        this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
-        this.obtenerCliente(this.id, this.cli, this.DataBaseAlias);
+        this.medAnor = this.$route.params.Anormalidad;
+        // this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
+        this.obtenerCliente(this.id, this.cli, this.medAnor, this.DataBaseAlias);
         // this.obtenerUbicacion();
         this.listarAnormalidad(1);
     },
@@ -404,44 +406,54 @@ export default {
                     console.log(e.response);
                 })
         },
-        obtenerCliente(id, cli, DataBaseAlias){
-            this.axios.post('/admin/verLecturaIdProcesada?tcGeneracionFactura='+id+'&tcCliente='+cli+'&DataBaseAlias='+DataBaseAlias)
-                .then(res => {
-                    if (res.data.status == 403){
-                        SessionExpirada();
-                    }else{
-                        this.arrayCliente = res.data.values;
-                        console.log(this.arrayCliente[0].CodigoUbicacion)
-                        let cadena = this.arrayCliente[0].CodigoUbicacion
-                        this.zona = cadena.substr(0, 2)
-                        this.ruta = cadena.substr(2, 2)
-                        this.cargarValores();
-                    }
-                })
-                .catch(e => {
-                    this.show = false;
-                })
+        obtenerCliente(id, cli, medAnor, DataBaseAlias){
+            this.axios.post('/admin/verLecturaIdPendiente', {
+                'tcGeneracionFactura' : id,
+                'tcAnormalidad'       : medAnor,
+                'DataBaseAlias'       : DataBaseAlias,
+                'tcCliente'           : cli
+            })
+            .then(res => {
+                if (res.data.status == 403){
+                    SessionExpirada();
+                }else{
+                    this.arrayCliente = res.data.values;
+                    console.log(this.arrayCliente[0].CodigoUbicacion)
+                    let cadena = this.arrayCliente[0].CodigoUbicacion
+                    this.zona = cadena.substr(0, 2)
+                    this.ruta = cadena.substr(2, 2)
+                    this.cargarValores();
+                }
+            })
+            .catch(e => {
+                this.show = false;
+            })
         },
         obtenerClienteNext(id, DataBaseAlias){
             this.show = true;
-            this.axios.post('/admin/verLecturaIdNextProcesada?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias+'&CodigoUbicacion='+this.codigoUbicacion)
-                .then(res => {
-                    if (res.data.status == 403){
-                        SessionExpirada();
+            this.axios.post('/admin/verLecturaIdNextPendiente', {
+                'tcGeneracionFactura' : id,
+                'tcAnormalidad'       : this.medAnor,
+                'DataBaseAlias'       : DataBaseAlias,
+                'CodigoUbicacion'     : this.codigoUbicacion
+            })
+            .then(res => {
+                if (res.data.status == 403){
+                    SessionExpirada();
+                }else{
+                    if (res.data.values.length == 0) {
+                        this.$bvModal.show('modal-sin-cliente');
                     }else{
-                        if (res.data.values.length == 0) {
-                            this.$bvModal.show('modal-sin-cliente');
-                        }else{
-                            this.arrayCliente = res.data.values;
-                            this.cargarValoresNext();
-                        }
-                        this.show = false;
+                        this.arrayCliente = res.data.values;
+                        this.cargarValoresNext();
                     }
-                })
-                .catch(e => {
-                    console.log(e.response);
                     this.show = false;
-                })
+                }
+            })
+            .catch(e => {
+                console.log(e.response);
+                this.show = false;
+            })
         },
         // cargarCliente(){
         //     this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
