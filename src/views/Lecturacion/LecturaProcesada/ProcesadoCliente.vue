@@ -373,14 +373,16 @@
         </div> -->
 
         <footer class="bg-light fixed-bottom">
-            <!-- Copyright -->
-            <div class="text-center p-3">
+            <!-- <div class="text-center p-3">
                 <div class="d-grid gap-2">
                     <b-button variant="success" @click="guardarLectura()"> Guardar </b-button>
                     <b-button @click="$router.go(-1)" variant="danger"> Volver </b-button>
                 </div>
+            </div> -->
+            <div style="display: block; width: 100%;" class="my-2 text-center">
+                <b-button style="width: 40%;" class="m-1 p-2" @click="$router.go(-1)" variant="danger"> Volver </b-button>
+                <b-button style="width: 40%;" class="m-1 p-2" variant="success" @click="guardarLectura()"> Guardar </b-button>
             </div>
-            <!-- Copyright -->
         </footer>
 
     </div>

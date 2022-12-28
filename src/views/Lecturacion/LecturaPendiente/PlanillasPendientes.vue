@@ -15,7 +15,7 @@
                     <div class="card-body" v-if="arrayFacturas.length > 0">
                         <div class="table-responsive">
                             <table class="table table-striped table-borderless table-sm caption-top">
-                            <caption> <b> Lecturas Pendientes </b> </caption>
+                            <caption> <b> Lecturas de Inspección </b> </caption>
                                 <thead>
                                     <tr class="text-center bg-primary">
                                         <th style="white-space:nowrap">ACCIONES</th>

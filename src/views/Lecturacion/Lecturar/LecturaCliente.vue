@@ -19,7 +19,12 @@
                         <b> Código Ubicación: </b> {{ codigoUbicacion }} <br>
                         <b> Nombre: </b> {{ nombreCliente }} <br>
                         <b> Media: </b> {{ Math.ceil(media) }} <label class="mx-4"> <b> Corte: </b> {{corte}} </label> <br>
-                        <b> Categoria: </b> {{ NombreCategoria }} <br>
+                        <b> Categoria: </b> {{ NombreCategoria }}
+                        
+                        <div class="form-check form-check-inline form-switch mx-0">
+                            <label class="form-check-label" for="inlineCheckbox1"> <b> Categorizar </b> </label>
+                            <input class="form-check-input" type="checkbox" v-model="switchCategorizar" @change="categorizar()">
+                        </div>
 
                         <div v-if="conMedidor == true">
                             <div class="form-floating">
@@ -69,7 +74,8 @@
                         <div class="form-floating my-1">
                             <form enctype="multipart/form-data">
                                 <div>
-                                    <input type="file" accept="image/*" class="form-control" id="file" multiple @change="obtenerImagen" required>
+                                    <!-- <input type="file" accept="image/*" class="form-control" id="file" multiple @change="obtenerImagen" required> -->
+                                    <input type="file" accept="image/*" class="form-control" id="file" multiple @change="obtenerImagen" required capture="camera"/>
                                 </div>
                             </form>
                         </div>
@@ -225,141 +231,141 @@
         <!-- FIN - MODAL SIN CLIENTE A LECTURAR -->
 
         <!-- INICIO - MODAL ANORMALIDADES -->
-            <b-modal centered id="modal-anormalidad">
-                <template hidden #modal-header="{ close }">
-                    <b-button hidden variant="outline-danger" @click="close()">
-                        Cerrar
-                    </b-button>
+        <b-modal centered id="modal-anormalidad">
+            <template hidden #modal-header="{ close }">
+                <b-button hidden variant="outline-danger" @click="close()">
+                    Cerrar
+                </b-button>
 
-                    <h5 class="text-black">Busqueda de Anormalidades!</h5>
-                </template>
-                
-                    <select class="form-control" v-model="orden" @change="select">
-                        <option value="top10">Top 10 Anormalidades</option>
-                        <option value="ASC">Por Nombre Ascendente</option>
-                        <option value="DESC">Por Nombre Descendente</option>
-                    </select>
-                    <b-input-group class="my-2 my-sm-0">
-                        <b-form-input type="text" placeholder="Regla - Nombre - Tipo Consumo" v-model="dato"></b-form-input>
-                        <b-button v-if="mostrar" @click="listarAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
-                        <b-button v-else @click="limpiarCampos" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
-                    </b-input-group>
-                    <select class="form-control my-2" v-model="tipo" @change="mostrarBtn">
-                        <option value="Regla">Por Regla</option>
-                        <option value="Nombre">Por Nombre</option>
-                        <option value="TipoConsumo">Por Tipo Consumo</option>
-                    </select>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-sm">
-                            <thead class="sticky-header">
-                                <tr class="text-center bg-primary">
-                                    <th style="white-space:nowrap">ACCIÓN</th>
-                                    <th style="white-space:nowrap">NOMBRE ANORMALIDAD</th>
-                                </tr>
-                            </thead>
-                            <tbody v-for="(item, index) in arrayAnormalidades" :key="item.MedidorAnormalidad">
-                                <tr>
-                                    <td style="white-space:nowrap">
-                                        <b-button @click="cargarAnormalidad(item)" title="Editar Usuario" class="btn btn-success btn-sm mx-1"> 
-                                            <b-icon icon="arrow-right-square" aria-hidden="true"></b-icon> 
-                                        </b-button>
-                                        <b-button v-b-toggle="'collapse' + index" title="Ver más" class="btn-sm mx-1" variant="primary" >
-                                            <b-icon icon="eye" aria-hidden="true"></b-icon> 
-                                        </b-button>
-                                    </td>
-                                    <td hidden align="right"> </td>
-                                    <td hidden align="left"> </td>
-                                    <td style="white-space:nowrap"> {{ item.NombreAnormalidad }} </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">
-                                        <b-collapse v-bind:id="'collapse' + index" class="mt-2 acordeon">
-                                            <b-card>
-                                                <b> Anormalidad: </b> {{ item.MedidorAnormalidad }} - {{ item.NombreAnormalidad }} <br>
-                                                <b> Tipo Consumo: </b> {{ item.Nombre }} <br>
-                                                <b> Regla: </b> {{ item.Regla }} - {{ item.NombreL }}
-                                            </b-card>
-                                        </b-collapse>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                <b-overlay :show="show2" no-wrap></b-overlay>
-                <!-- INICIO PAGINACIÓN -->
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center mt-2">
-                        <li class="page-item prev-item" v-if="pagination.current_page > 1">
-                            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1)">
-                                <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
-                            </a>
-                        </li>
+                <h5 class="text-black">Busqueda de Anormalidades!</h5>
+            </template>
+            
+                <select class="form-control" v-model="orden" @change="select">
+                    <option value="top10">Top 10 Anormalidades</option>
+                    <option value="ASC">Por Nombre Ascendente</option>
+                    <option value="DESC">Por Nombre Descendente</option>
+                </select>
+                <b-input-group class="my-2 my-sm-0">
+                    <b-form-input type="text" placeholder="Regla - Nombre - Tipo Consumo" v-model="dato"></b-form-input>
+                    <b-button v-if="mostrar" @click="listarAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
+                    <b-button v-else @click="limpiarCampos" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
+                </b-input-group>
+                <select class="form-control my-2" v-model="tipo" @change="mostrarBtn">
+                    <option value="Regla">Por Regla</option>
+                    <option value="Nombre">Por Nombre</option>
+                    <option value="TipoConsumo">Por Tipo Consumo</option>
+                </select>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead class="sticky-header">
+                            <tr class="text-center bg-primary">
+                                <th style="white-space:nowrap">ACCIÓN</th>
+                                <th style="white-space:nowrap">NOMBRE ANORMALIDAD</th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="(item, index) in arrayAnormalidades" :key="item.MedidorAnormalidad">
+                            <tr>
+                                <td style="white-space:nowrap">
+                                    <b-button @click="cargarAnormalidad(item)" title="Editar Usuario" class="btn btn-success btn-sm mx-1"> 
+                                        <b-icon icon="arrow-right-square" aria-hidden="true"></b-icon> 
+                                    </b-button>
+                                    <b-button v-b-toggle="'collapse' + index" title="Ver más" class="btn-sm mx-1" variant="primary" >
+                                        <b-icon icon="eye" aria-hidden="true"></b-icon> 
+                                    </b-button>
+                                </td>
+                                <td hidden align="right"> </td>
+                                <td hidden align="left"> </td>
+                                <td style="white-space:nowrap"> {{ item.NombreAnormalidad }} </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <b-collapse v-bind:id="'collapse' + index" class="mt-2 acordeon">
+                                        <b-card>
+                                            <b> Anormalidad: </b> {{ item.MedidorAnormalidad }} - {{ item.NombreAnormalidad }} <br>
+                                            <b> Tipo Consumo: </b> {{ item.Nombre }} <br>
+                                            <b> Regla: </b> {{ item.Regla }} - {{ item.NombreL }}
+                                        </b-card>
+                                    </b-collapse>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <b-overlay :show="show2" no-wrap></b-overlay>
+            <!-- INICIO PAGINACIÓN -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center mt-2">
+                    <li class="page-item prev-item" v-if="pagination.current_page > 1">
+                        <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1)">
+                            <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
+                        </a>
+                    </li>
 
-                        <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']" aria-current="page">
-                            <a class="page-link" href="#" @click.prevent="cambiarPagina(page)" v-text="page"></a>
-                        </li>
-                        
-                        <li class="page-item next-item" v-if="pagination.current_page < pagination.last_page">
-                            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1)">
-                                <b-icon icon="arrow-right" aria-hidden="true"></b-icon>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- FIN PAGINACIÓN -->
+                    <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']" aria-current="page">
+                        <a class="page-link" href="#" @click.prevent="cambiarPagina(page)" v-text="page"></a>
+                    </li>
+                    
+                    <li class="page-item next-item" v-if="pagination.current_page < pagination.last_page">
+                        <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1)">
+                            <b-icon icon="arrow-right" aria-hidden="true"></b-icon>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- FIN PAGINACIÓN -->
 
-                <template #modal-footer="{ cancel }">
-                    <b-button hidden block variant="outline-success" @click="ok()">
-                        Seleccionar
-                    </b-button>
+            <template #modal-footer="{ cancel }">
+                <b-button hidden block variant="outline-success" @click="ok()">
+                    Seleccionar
+                </b-button>
 
-                    <b-button variant="danger" @click="cancel()">
-                        Cancelar
-                    </b-button>
-                </template>
-            </b-modal>
+                <b-button variant="danger" @click="cancel()">
+                    Cancelar
+                </b-button>
+            </template>
+        </b-modal>
         <!-- FIN - MODAL ANORMALIDADES -->
 
         <!-- INICIO - MODAL ANORMALIDADES -->
-            <b-modal centered id="modal-buscar">
-                <template hidden #modal-header="{ close }">
-                    <b-button hidden variant="outline-danger" @click="close()">
-                        Cerrar
-                    </b-button>
+        <b-modal centered id="modal-buscar">
+            <template hidden #modal-header="{ close }">
+                <b-button hidden variant="outline-danger" @click="close()">
+                    Cerrar
+                </b-button>
 
-                    <h5 class="text-black">Buscar Cliente</h5>
-                </template>
+                <h5 class="text-black">Buscar Cliente</h5>
+            </template>
+            
+            <!-- Buscador - INICIO -->
+            <div v-if="showMessage == true">
+                <b>{{messageCliente}}</b>
+            </div>
+            <select class="form-select my-2" v-model="tipoC">
+                <!-- <option value="Nombre">Buscar por: Nombre Cliente</option> -->
+                <option value="Codigo">Buscar por: Código Cliente</option>
+                <option value="Ubicacion">Buscar por: Código Ubicación ({{ zona }}{{ ruta }})</option>
+                <!-- <option value="UbicacionOtro">Buscar por: Código Ubicación (otro)</option> -->
+            </select>
+
+            <b-input-group class="my-sm-0">
+                <b-button variant="info"><b-icon icon="search" @click="buscarCliente()"></b-icon></b-button>
+                <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="dato"></b-form-input>
+                <b-button variant="danger"><b-icon icon="x" aria-hidden="true" @click="dato = ''"></b-icon></b-button>
+            </b-input-group>
+            <!-- Buscador - FIN -->
                 
-                <!-- Buscador - INICIO -->
-                <div v-if="showMessage == true">
-                    <b>{{messageCliente}}</b>
-                </div>
-                <select class="form-select my-2" v-model="tipoC">
-                    <!-- <option value="Nombre">Buscar por: Nombre Cliente</option> -->
-                    <option value="Codigo">Buscar por: Código Cliente</option>
-                    <option value="Ubicacion">Buscar por: Código Ubicación ({{ zona }}{{ ruta }})</option>
-                    <!-- <option value="UbicacionOtro">Buscar por: Código Ubicación (otro)</option> -->
-                </select>
+            <b-overlay :show="show3" no-wrap></b-overlay>
 
-                <b-input-group class="my-sm-0">
-                    <b-button variant="info"><b-icon icon="search" @click="buscarCliente()"></b-icon></b-button>
-                    <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="dato"></b-form-input>
-                    <b-button variant="danger"><b-icon icon="x" aria-hidden="true" @click="dato = ''"></b-icon></b-button>
-                </b-input-group>
-                <!-- Buscador - FIN -->
-                    
-                <b-overlay :show="show3" no-wrap></b-overlay>
+            <template #modal-footer="{ cancel }">
+                <b-button hidden block variant="outline-success" @click="ok()">
+                    Seleccionar
+                </b-button>
 
-                <template #modal-footer="{ cancel }">
-                    <b-button hidden block variant="outline-success" @click="ok()">
-                        Seleccionar
-                    </b-button>
-
-                    <b-button variant="danger" @click="cancel()">
-                        Cancelar
-                    </b-button>
-                </template>
-            </b-modal>
+                <b-button variant="danger" @click="cancel()">
+                    Cancelar
+                </b-button>
+            </template>
+        </b-modal>
         <!-- FIN - MODAL ANORMALIDADES -->
         
         <!-- <div>
@@ -370,15 +376,19 @@
         </div> -->
 
         <footer class="bg-light fixed-bottom">
-            <!-- Copyright -->
-            <div class="text-center p-3">
+            <!-- <div class="text-center p-3">
                 <div class="d-grid gap-2">
                     <b-button variant="success" @click="guardarLectura()"> Guardar </b-button>
                     <b-button @click="$router.go(-1)" variant="danger"> Volver </b-button>
                 </div>
+            </div> -->
+            <div style="display: block; width: 100%;" class="my-2 text-center">
+                <b-button style="width: 40%;" class="m-1 p-2" @click="$router.go(-1)" variant="danger"> Volver </b-button>
+                <b-button style="width: 40%;" class="m-1 p-2" variant="success" @click="guardarLectura()"> Guardar </b-button>
             </div>
-            <!-- Copyright -->
         </footer>
+
+
 
     </div>
 </template>

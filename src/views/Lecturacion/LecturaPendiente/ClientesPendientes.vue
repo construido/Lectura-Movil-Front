@@ -52,7 +52,7 @@
         <div class="container my-2">
             <div class="card">
                 <div class="card-header text-center sticky-header">
-                    <h5> <b> Lecturas Pendientes [{{lecturados}}/{{pendientes}}] </b> </h5>
+                    <h5> <b> Lecturas de Inspección [{{lecturados}}/{{pendientes}}] </b> </h5>
                     <h6> <b> ZonaRuta: {{ zona }}{{ ruta }} </b> </h6>
                 </div>
                 <b-overlay :show="show" class="d-inline-block">
