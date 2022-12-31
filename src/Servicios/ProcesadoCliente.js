@@ -439,11 +439,13 @@ export default {
                     if (res.data.status == 403){
                         SessionExpirada();
                     }else{
+                        console.log(res.data.values)
                         this.arrayCliente = res.data.values;
                         console.log(this.arrayCliente[0].CodigoUbicacion)
                         let cadena = this.arrayCliente[0].CodigoUbicacion
                         this.zona = cadena.substr(0, 2)
                         this.ruta = cadena.substr(2, 2)
+                        this.switchCategorizar = res.data.values.Categorizar
                         this.cargarValores();
                     }
                 })
@@ -462,6 +464,7 @@ export default {
                             this.$bvModal.show('modal-sin-cliente');
                         }else{
                             this.arrayCliente = res.data.values;
+                            this.switchCategorizar = res.data.values.Categorizar
                             this.cargarValoresNext();
                         }
                         this.show = false;

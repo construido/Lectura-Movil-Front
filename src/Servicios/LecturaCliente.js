@@ -473,25 +473,29 @@ export default {
         },
         obtenerClienteNext(id, DataBaseAlias){
             this.show = true;
-            this.axios.post('/admin/verLecturaIdNext?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias)
-                .then(res => {
-                    if (res.data.status == 403){
-                        SessionExpirada();
+            this.axios.post('/admin/verLecturaIdNext', {
+                'tcGeneracionFactura' : id,
+                'DataBaseAlias' : DataBaseAlias,
+                'CodigoUbicacion' : this.codigoUbicacion
+            })
+            .then(res => {
+                if (res.data.status == 403){
+                    SessionExpirada();
+                }else{
+                    if (res.data.values.length == 0){
+                        this.$bvModal.show('modal-sin-cliente');
                     }else{
-                        if (res.data.values.length == 0){
-                            this.$bvModal.show('modal-sin-cliente');
-                        }else{
-                            this.arrayCliente = res.data.values;
-                            this.cargarValoresNext();
-                        }
-                        this.show = false;
+                        this.arrayCliente = res.data.values;
+                        this.cargarValoresNext();
                     }
-                })
-                .catch(e => {
-                    this.arrayAnormalidades = [];
-                    console.log(e.response);
                     this.show = false;
-                })
+                }
+            })
+            .catch(e => {
+                this.arrayAnormalidades = [];
+                console.log(e.response);
+                this.show = false;
+            })
         },
         cargarCliente(){
             this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;

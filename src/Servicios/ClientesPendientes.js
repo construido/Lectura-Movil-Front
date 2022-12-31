@@ -74,6 +74,9 @@ export default {
     },
 
     methods: {
+        limpiarBuscar(){
+            if(this.tipo == 'LecturaPendiente') this.buscar = ''
+        },
         atras(){
             localStorage.removeItem('Tipo');
             localStorage.removeItem('Dato');

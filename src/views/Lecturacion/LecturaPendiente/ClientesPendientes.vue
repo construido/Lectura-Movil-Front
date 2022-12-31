@@ -9,14 +9,14 @@
                     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
                     <b-navbar-brand class="mx-auto" href="#">LecturaMovil - {{EmpresaNombre}} </b-navbar-brand>
 
-                    <select class="form-select my-2" v-model="tipo">
+                    <select class="form-select my-2" v-model="tipo" @change="limpiarBuscar()">
                         <option value="LecturaPendiente">Buscar por: Lectura Pendiente</option>
                         <option value="MedidorAnormalidad">Buscar por: Otra Anormalidad</option>
                     </select>
 
                     <b-input-group class="my-sm-0">
                         <b-button @click="modalAnormalidad()" variant="info"><b-icon icon="question-circle"></b-icon></b-button>
-                        <b-form-input type="text" placeholder="Busqueda de Anormalidad" v-model="buscar"></b-form-input>
+                        <b-form-input type="text" placeholder="Busqueda de Anormalidad" v-model="buscar" readonly></b-form-input>
                         <b-button @click="listarLecturas()" variant="info"><b-icon icon="search"></b-icon></b-button>
                     </b-input-group>
                     <!-- Buscador - FIN -->
