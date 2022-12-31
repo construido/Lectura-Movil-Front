@@ -18,9 +18,9 @@
                     </select>
 
                     <b-input-group class="my-sm-0">
-                        <b-button @click="listarLecturas()" variant="info"><b-icon icon="search"></b-icon></b-button>
-                        <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="buscar"></b-form-input>
                         <b-button @click="limpiar()" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
+                        <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="buscar"></b-form-input>
+                        <b-button @click="listarLecturas()" variant="info"><b-icon icon="search"></b-icon></b-button>
                     </b-input-group>
                     <!-- Buscador - FIN -->
 
@@ -57,7 +57,6 @@
                     <div class="card-body" v-if="arrayLecturas.length > 0">
                         <div class="table-responsive">
                             <table class="table table-striped table-borderless table-sm caption-top">
-                                <!-- <caption> <b> Clientes Pendientes </b> </caption> -->
                                 <thead class="sticky-header">
                                     <tr class="text-center bg-primary">
                                         <th style="white-space:nowrap">ACCIONES</th>
@@ -87,7 +86,6 @@
                                         <td colspan="5">
                                             <b-collapse v-bind:id="'collapse' + index" class="mt-2 acordeon">
                                                 <b-card>
-                                                    <!-- <b> Planilla de Lecturación: </b> {{ index + 1 }} <br> -->
                                                     <b> Planilla de Lecturación: </b> {{ item.GeneracionFactura }} <br>
                                                     <b> Nombre: </b> {{ item.Nombre }} <br>
                                                     <div v-if="item.NombreMarcaMedidor">
@@ -115,12 +113,6 @@
                         <!-- INICIO DE LA PAGINACION -->
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-center mt-2">
-                                <!-- <li class="page-item next" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" aria-label="Previous" @click.prevent="cambiarPagina(pagination.current_page)">
-                                        <b-icon icon="box-arrow-in-left" aria-hidden="true"></b-icon>
-                                    </a>
-                                </li> -->
-
                                 <li class="page-item prev-item" v-if="pagination.current_page > 1">
                                     <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1)">
                                         <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
@@ -136,12 +128,6 @@
                                         <b-icon icon="arrow-right" aria-hidden="true"></b-icon>
                                     </a>
                                 </li>
-                                
-                                <!-- <li class="page-item next" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" aria-label="Previous" @click.prevent="cambiarPagina(pagination.last_page)">
-                                        <b-icon icon="box-arrow-in-right" aria-hidden="true"></b-icon>
-                                    </a>
-                                </li> -->
                             </ul>
                         </nav>
                         <!-- FIN DE LA PAGINACION -->

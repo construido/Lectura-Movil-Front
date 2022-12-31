@@ -40,7 +40,7 @@
 
                             <div>
                                 <b-card no-body>
-                                    <b-tabs card>
+                                    <b-tabs card pills fill>
                                         <b-tab title="Anormalidad 1" active>
                                             <b-card-text>
                                                 <b-input-group class="my-sm-0">
@@ -240,57 +240,57 @@
                 <h5 class="text-black">Busqueda de Anormalidades!</h5>
             </template>
             
-                <select class="form-control" v-model="orden" @change="select">
-                    <option value="top10">Top 10 Anormalidades</option>
-                    <option value="ASC">Por Nombre Ascendente</option>
-                    <option value="DESC">Por Nombre Descendente</option>
-                </select>
-                <b-input-group class="my-2 my-sm-0">
-                    <b-form-input type="text" placeholder="Regla - Nombre - Tipo Consumo" v-model="dato"></b-form-input>
-                    <b-button v-if="mostrar" @click="listarAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
-                    <b-button v-else @click="limpiarCampos" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
-                </b-input-group>
-                <select class="form-control my-2" v-model="tipo" @change="mostrarBtn">
-                    <option value="Regla">Por Regla</option>
-                    <option value="Nombre">Por Nombre</option>
-                    <option value="TipoConsumo">Por Tipo Consumo</option>
-                </select>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-sm">
-                        <thead class="sticky-header">
-                            <tr class="text-center bg-primary">
-                                <th style="white-space:nowrap">ACCIÓN</th>
-                                <th style="white-space:nowrap">NOMBRE ANORMALIDAD</th>
-                            </tr>
-                        </thead>
-                        <tbody v-for="(item, index) in arrayAnormalidades" :key="item.MedidorAnormalidad">
-                            <tr>
-                                <td style="white-space:nowrap">
-                                    <b-button @click="cargarAnormalidad(item)" title="Editar Usuario" class="btn btn-success btn-sm mx-1"> 
-                                        <b-icon icon="arrow-right-square" aria-hidden="true"></b-icon> 
-                                    </b-button>
-                                    <b-button v-b-toggle="'collapse' + index" title="Ver más" class="btn-sm mx-1" variant="primary" >
-                                        <b-icon icon="eye" aria-hidden="true"></b-icon> 
-                                    </b-button>
-                                </td>
-                                <td hidden align="right"> </td>
-                                <td hidden align="left"> </td>
-                                <td style="white-space:nowrap"> {{ item.NombreAnormalidad }} </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <b-collapse v-bind:id="'collapse' + index" class="mt-2 acordeon">
-                                        <b-card>
-                                            <b> Anormalidad: </b> {{ item.MedidorAnormalidad }} - {{ item.NombreAnormalidad }} <br>
-                                            <b> Tipo Consumo: </b> {{ item.Nombre }} <br>
-                                            <b> Regla: </b> {{ item.Regla }} - {{ item.NombreL }}
-                                        </b-card>
-                                    </b-collapse>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <select class="form-control" v-model="orden" @change="select">
+                <option value="top10">Top 6 Anormalidades</option>
+                <option value="ASC">Por Nombre Ascendente</option>
+                <option value="DESC">Por Nombre Descendente</option>
+            </select>
+            <select class="form-control my-2" v-model="tipo" @change="mostrarBtn">
+                <option value="Regla">Por Regla</option>
+                <option value="Nombre">Por Nombre</option>
+                <option value="TipoConsumo">Por Tipo Consumo</option>
+            </select>
+            <b-input-group class="my-2 my-sm-0">
+                <b-form-input type="text" placeholder="Regla - Nombre - Tipo Consumo" v-model="dato"></b-form-input>
+                <b-button v-if="mostrar" @click="listarAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
+                <b-button v-else @click="limpiarCampos" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
+            </b-input-group>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-sm">
+                    <thead class="sticky-header">
+                        <tr class="text-center bg-primary">
+                            <th style="white-space:nowrap">ACCIÓN</th>
+                            <th style="white-space:nowrap">NOMBRE ANORMALIDAD</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="(item, index) in arrayAnormalidades" :key="item.MedidorAnormalidad">
+                        <tr>
+                            <td style="white-space:nowrap">
+                                <b-button @click="cargarAnormalidad(item)" title="Editar Usuario" class="btn btn-success btn-sm mx-1"> 
+                                    <b-icon icon="arrow-right-square" aria-hidden="true"></b-icon> 
+                                </b-button>
+                                <b-button v-b-toggle="'collapse' + index" title="Ver más" class="btn-sm mx-1" variant="primary" >
+                                    <b-icon icon="eye" aria-hidden="true"></b-icon> 
+                                </b-button>
+                            </td>
+                            <td hidden align="right"> </td>
+                            <td hidden align="left"> </td>
+                            <td style="white-space:nowrap"> {{ item.NombreAnormalidad }} </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b-collapse v-bind:id="'collapse' + index" class="mt-2 acordeon">
+                                    <b-card>
+                                        <b> Anormalidad: </b> {{ item.MedidorAnormalidad }} - {{ item.NombreAnormalidad }} <br>
+                                        <b> Tipo Consumo: </b> {{ item.Nombre }} <br>
+                                        <b> Regla: </b> {{ item.Regla }} - {{ item.NombreL }}
+                                    </b-card>
+                                </b-collapse>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <b-overlay :show="show2" no-wrap></b-overlay>
             <!-- INICIO PAGINACIÓN -->
             <nav aria-label="Page navigation example">
@@ -348,9 +348,9 @@
             </select>
 
             <b-input-group class="my-sm-0">
-                <b-button variant="info"><b-icon icon="search" @click="buscarCliente()"></b-icon></b-button>
-                <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="dato"></b-form-input>
                 <b-button variant="danger"><b-icon icon="x" aria-hidden="true" @click="dato = ''"></b-icon></b-button>
+                <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="dato"></b-form-input>
+                <b-button variant="info"><b-icon icon="search" @click="buscarCliente()"></b-icon></b-button>
             </b-input-group>
             <!-- Buscador - FIN -->
                 
@@ -376,12 +376,6 @@
         </div> -->
 
         <footer class="bg-light fixed-bottom">
-            <!-- <div class="text-center p-3">
-                <div class="d-grid gap-2">
-                    <b-button variant="success" @click="guardarLectura()"> Guardar </b-button>
-                    <b-button @click="$router.go(-1)" variant="danger"> Volver </b-button>
-                </div>
-            </div> -->
             <div style="display: block; width: 100%;" class="my-2 text-center">
                 <b-button style="width: 40%;" class="m-1 p-2" @click="$router.go(-1)" variant="danger"> Volver </b-button>
                 <b-button style="width: 40%;" class="m-1 p-2" variant="success" @click="guardarLectura()"> Guardar </b-button>

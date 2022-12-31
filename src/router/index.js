@@ -119,9 +119,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "servidormovil" */ '../views/Sincronizacion/ServidorMovil/ServidorMovil.vue'),
   },
   {
-    path: '/sincronizacion/servidorinspeccion',
-    name: 'ServidorInspeccion',
-    component: () => import(/* webpackChunkName: "servidorinspeccion" */ '../views/Sincronizacion/ServidorInspeccion/ServidorInspeccion.vue'),
+    path: '/sincronizacion/recursogeneral',
+    name: 'RecursoGeneral',
+    component: () => import(/* webpackChunkName: "servidorinspeccion" */ '../views/Sincronizacion/RecursoGeneral/RecursoGeneral.vue'),
   },
   {
     path: '/sincronizacion/movilservidor',

@@ -9,20 +9,15 @@
                     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
                     <b-navbar-brand class="mx-auto" href="#">LecturaMovil - {{EmpresaNombre}} </b-navbar-brand>
 
-                    <!-- Buscador - INICIO -->
-                    <!-- <div style="text-align:center; color: white;" class="mt-2">
-                        <label for="" >ESTABLECER ANORMALIDAD</label>
-                    </div> -->
-
                     <select class="form-select my-2" v-model="tipo">
                         <option value="LecturaPendiente">Buscar por: Lectura Pendiente</option>
                         <option value="MedidorAnormalidad">Buscar por: Otra Anormalidad</option>
                     </select>
 
                     <b-input-group class="my-sm-0">
-                        <b-button @click="listarLecturas()" variant="info"><b-icon icon="search"></b-icon></b-button>
+                        <b-button @click="modalAnormalidad()" variant="info"><b-icon icon="question-circle"></b-icon></b-button>
                         <b-form-input type="text" placeholder="Busqueda de Anormalidad" v-model="buscar"></b-form-input>
-                        <b-button @click="modalAnormalidad()" variant="info"><b-icon icon="droplet-half"></b-icon></b-button>
+                        <b-button @click="listarLecturas()" variant="info"><b-icon icon="search"></b-icon></b-button>
                     </b-input-group>
                     <!-- Buscador - FIN -->
 
@@ -59,7 +54,6 @@
                     <div class="card-body" v-if="arrayLecturas.length > 0">
                         <div class="table-responsive">
                             <table class="table table-striped table-borderless table-sm caption-top">
-                                <!-- <caption> <b> Clientes Pendientes </b> </caption> -->
                                 <thead class="sticky-header">
                                     <tr class="text-center bg-primary">
                                         <th style="white-space:nowrap">ACCIONES</th>

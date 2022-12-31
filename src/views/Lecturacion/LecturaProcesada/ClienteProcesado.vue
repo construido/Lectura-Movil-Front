@@ -18,9 +18,9 @@
                     </select>
 
                     <b-input-group class="my-sm-0">
-                        <b-button @click="listarLecturas()" variant="info"><b-icon icon="search"></b-icon></b-button>
-                        <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="buscar"></b-form-input>
                         <b-button @click="limpiar()" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
+                        <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="buscar"></b-form-input>
+                        <b-button @click="listarLecturas()" variant="info"><b-icon icon="search"></b-icon></b-button>
                     </b-input-group>
                     <!-- Buscador - FIN -->
 

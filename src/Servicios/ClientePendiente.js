@@ -107,6 +107,8 @@ export default {
             idCliente : 0,
             codUbi: 0,
             cobro: '',
+
+            switchCategorizar: false,
         }
     },
 
@@ -152,6 +154,32 @@ export default {
     },
 
     methods: {
+        categorizar(){
+            this.show = true
+            this.switchCategorizar != this.switchCategorizar
+            if(this.switchCategorizar){
+                this.axios.post('/admin/Categorizar', {
+                    'DataBaseAlias'       : this.DataBaseAlias
+                })
+                .then(res => {
+                    console.log(res.data)
+                    this.anormalidad2 = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadVerificarCategoria;
+                    this.anormalidadCorrecta2 = res.data[0].AnormalidadVerificarCategoria;
+                    console.log(this.anormalidadCorrecta2);
+                    this.show = false
+                })
+                .catch(e => {
+                    console.log(e.response)
+                    this.show = false
+                })
+            }else{
+                console.log(this.switchCategorizar)
+                this.anormalidad2 = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta2 = 0
+                console.log(this.anormalidadCorrecta2);
+                this.show = false
+            }
+        },
         modalCliente(){ // TODO: se le implemento la variable "dato" que recibe del formulario
             this.$bvModal.show('modal-buscar');
         },
@@ -359,7 +387,8 @@ export default {
                     this.DatosFactura(this.id, this.cli);
                     let input = document.getElementById("file");
                     input.value = ''
-                    this.show = false;
+                    this.show = false
+                    this.switchCategorizar = false
                 }else{
                     this.arrayErrores = res.data.values;
                     this.llenarCampoErrores();

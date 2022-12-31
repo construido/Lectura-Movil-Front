@@ -178,7 +178,7 @@ export default {
                     SessionExpirada();
                 }else{
                     this.arrayLecturasPendientes = res.data.values;
-                    this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
+                    // this.lecturados = this.arrayLecturasPendientes[0].Lecturados;
                     this.pendientes = this.arrayLecturasPendientes[0].Pendientes;
                 }
             })
@@ -198,7 +198,7 @@ export default {
                     }else{
                         this.arrayLecturas = res.data.values.generacionLectura.data;
                         this.pagination    = res.data.values.pagination;
-                        // this.lecturasPendientesLecturados(this.id, this.DataBaseAlias)
+                        this.lecturados    = this.arrayLecturas.length
 
                         if (res.data.values.generacionLectura.data.length > 0) {
                             this.zona = this.arrayLecturas[0].Zona;

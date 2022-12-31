@@ -20,7 +20,7 @@ Vue.use(VueAxios, axios)
 window.axios = axios
 
 axios.defaults.baseURL = 'http://192.168.100.109:8000/api';
-//axios.defaults.baseURL = 'https://serviciolecturamovil.syscoop.com.bo/api';
+// axios.defaults.baseURL = 'https://serviciolecturamovil.syscoop.com.bo/api';
 
 var token = localStorage.getItem('token');
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;

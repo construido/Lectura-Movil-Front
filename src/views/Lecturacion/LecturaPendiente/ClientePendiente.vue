@@ -8,9 +8,7 @@
                     <div class="col-xl-6">
                         <div class="text-center">
                             <h5>
-                                <!-- <b> Lecturación [{{lecturados}}/{{pendientes}}]</b> -->
-                                <!-- <label class="mx-3"> <b> Lecturación [{{lecturados}}/{{pendientes}}] </b> </label> -->
-                                <label class="mx-3"> <b> Lecturación </b> </label>
+                                <label class="mx-3"> <b> Inspección </b> </label>
                                 <b-button variant="primary"><b-icon icon="search" @click="modalCliente()"></b-icon></b-button>
                             </h5>
                         </div>
@@ -21,7 +19,12 @@
                         <b> Código Ubicación: </b> {{ codigoUbicacion }} <br>
                         <b> Nombre: </b> {{ nombreCliente }} <br>
                         <b> Media: </b> {{ Math.ceil(media) }} <label for="media" class="mx-4"> <b> Corte: </b> {{corte}} </label> <br>
-                        <b> Categoria: </b> {{ NombreCategoria }} <br>
+                        <b> Categoria: </b> {{ NombreCategoria }}
+
+                        <div class="form-check form-check-inline form-switch mx-0">
+                            <label class="form-check-label" for="inlineCheckbox1"> <b> Categorizar </b> </label>
+                            <input class="form-check-input" type="checkbox" v-model="switchCategorizar" @change="categorizar()">
+                        </div>
 
                         <div v-if="conMedidor == true">
                             <div class="form-floating">
@@ -37,7 +40,7 @@
 
                             <div>
                                 <b-card no-body>
-                                    <b-tabs card>
+                                    <b-tabs card fill pills>
                                         <b-tab title="Anormalidad 1" active>
                                             <b-card-text>
                                                 <b-input-group class="my-sm-0">
@@ -244,16 +247,17 @@
                 <option value="ASC">Por Nombre Ascendente</option>
                 <option value="DESC">Por Nombre Descendente</option>
             </select>
-            <b-input-group class="my-2 my-sm-0">
-                <b-form-input type="text" placeholder="Regla - Nombre - Tipo Consumo" v-model="dato"></b-form-input>
-                <b-button v-if="mostrar" @click="listarAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
-                <b-button v-else @click="limpiarCampos" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
-            </b-input-group>
             <select class="form-control my-2" v-model="tipo" @change="mostrarBtn">
                 <option value="Regla">Por Regla</option>
                 <option value="Nombre">Por Nombre</option>
                 <option value="TipoConsumo">Por Tipo Consumo</option>
             </select>
+            <b-input-group class="my-2 my-sm-0">
+                <b-form-input type="text" placeholder="Regla - Nombre - Tipo Consumo" v-model="dato"></b-form-input>
+                <b-button v-if="mostrar" @click="listarAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
+                <b-button v-else @click="limpiarCampos" variant="danger"><b-icon icon="x" aria-hidden="true"></b-icon></b-button>
+            </b-input-group>
+
             <div class="table-responsive">
                 <table class="table table-bordered table-hover table-sm">
                     <thead class="sticky-header">
@@ -340,16 +344,14 @@
                 <b>{{messageCliente}}</b>
             </div>
             <select class="form-select my-2" v-model="tipoC">
-                <!-- <option value="Nombre">Buscar por: Nombre Cliente</option> -->
                 <option value="Codigo">Buscar por: Código Cliente</option>
                 <option value="Ubicacion">Buscar por: Código Ubicación ({{ zona }}{{ ruta }})</option>
-                <!-- <option value="UbicacionOtro">Buscar por: Código Ubicación (otro)</option> -->
             </select>
 
             <b-input-group class="my-sm-0">
-                <b-button variant="info"><b-icon icon="search" @click="buscarCliente()"></b-icon></b-button>
-                <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="dato"></b-form-input>
                 <b-button variant="danger"><b-icon icon="x" aria-hidden="true" @click="dato = ''"></b-icon></b-button>
+                <b-form-input type="text" placeholder="CodUbi - Cliente - Nombre" v-model="dato"></b-form-input>
+                <b-button variant="info"><b-icon icon="search" @click="buscarCliente()"></b-icon></b-button>
             </b-input-group>
             <!-- Buscador - FIN -->
                 
