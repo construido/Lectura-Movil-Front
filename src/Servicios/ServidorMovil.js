@@ -178,7 +178,7 @@ export default {
         },
         listarFacturas(page){
             this.show = true
-            this.axios.post('/admin/listarPlanillaDeLecturasPendientes?page='+page+'&DataBaseAlias='+this.DataBaseAlias+'&Plomero='+this.Plomero)
+            this.axios.post('/admin/listarTodasLasPlanilla?page='+page+'&DataBaseAlias='+this.DataBaseAlias+'&Plomero='+this.Plomero)
                 .then(res => {
                     if (res.data.status == 403){
                         SessionExpirada();

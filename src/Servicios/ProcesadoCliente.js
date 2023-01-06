@@ -108,6 +108,7 @@ export default {
             cobro: '',
 
             switchCategorizar: false,
+            switchLecturaPendiente : false,
         }
     },
 
@@ -178,6 +179,32 @@ export default {
                 this.show = false
             }
         },
+        lecturaPendiente(){
+            this.show = true
+            this.switchLecturaPendiente != this.switchLecturaPendiente
+            if(this.switchLecturaPendiente){
+                this.axios.post('/admin/LecturaPendiente', {
+                    'DataBaseAlias' : this.DataBaseAlias
+                })
+                .then(res => {
+                    console.log(res.data)
+                    this.anormalidad = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadPendiente;
+                    this.anormalidadCorrecta = res.data[0].AnormalidadPendiente;
+                    console.log(this.anormalidadCorrecta);
+                    this.show = false
+                })
+                .catch(e => {
+                    console.log(e.response)
+                    this.show = false
+                })
+            }else{
+                console.log(this.switchLecturaPendiente)
+                this.anormalidad = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta = 0
+                console.log(this.anormalidadCorrecta);
+                this.show = false
+            }
+        },
         modalCliente(){ // TODO: se le implemento la variable "dato" que recibe del formulario
             this.$bvModal.show('modal-buscar');
         },
@@ -193,12 +220,12 @@ export default {
                 if (res.data.status == 403){
                     SessionExpirada();
                 }else{
-                    this.arrayCliente = res.data.values;
+                    this.arrayCliente = res.data.values.GeneracionLectura
                     if(this.arrayCliente.length > 0){
-                        // this.cargarCliente()
                         this.cargarValoresNext()
                         this.showMessage = false
-                        console.log(res.data)
+                        this.switchCategorizar = res.data.values.Categorizar
+                        this.switchLecturaPendiente = res.data.values.Pendiente
                     }else{
                         this.showMessage = true
                         this.show3 = false
@@ -375,18 +402,28 @@ export default {
                 console.log(res.data);
 
                 if (res.data.values.Error == 2000 || this.conMedidor == false) {
-                    this.valido = 0;
-                    this.lecturaActual = '';
-                    this.anormalidad = 'Sin Anormalidad - - 0',
-                    this.anormalidad2 = 'Sin Anormalidad - - 0',  // TODO:
-                    this.anormalidadCorrecta = 0,
-                    this.anormalidadCorrecta2 = 0,  // TODO:
-                    this.$bvModal.show('modal-seguir');
-                    this.DatosFactura(this.id, this.cli);
-                    let input = document.getElementById("file");
+                    this.valido = 0
+                    this.lecturaActual = ''
+                    this.anormalidad = 'Sin Anormalidad - - 0'
+                    this.anormalidad2 = 'Sin Anormalidad - - 0'  // TODO:
+                    this.anormalidadCorrecta = 0
+                    this.anormalidadCorrecta2 = 0  // TODO:
+
+                    if(this.switchLecturaPendiente == true){
+                        this.$bvModal.hide('modal-seguir')
+                        this.show = false
+                        this.CancelarImpresion()
+                    }
+                    else{
+                        this.$bvModal.show('modal-seguir')
+                        this.show = false
+                    }
+
+                    this.DatosFactura(this.id, this.cli)
+                    let input = document.getElementById("file")
                     input.value = ''
-                    this.show = false
                     this.switchCategorizar = false
+                    this.switchLecturaPendiente = false
                 }else{
                     this.arrayErrores = res.data.values;
                     this.llenarCampoErrores();
@@ -446,6 +483,7 @@ export default {
                         this.zona = cadena.substr(0, 2)
                         this.ruta = cadena.substr(2, 2)
                         this.switchCategorizar = res.data.values.Categorizar
+                        this.switchLecturaPendiente = res.data.values.Pendiente
                         this.cargarValores();
                     }
                 })
@@ -465,6 +503,7 @@ export default {
                         }else{
                             this.arrayCliente = res.data.values;
                             this.switchCategorizar = res.data.values.Categorizar
+                            this.switchLecturaPendiente = res.data.values.Pendiente
                             this.cargarValoresNext();
                         }
                         this.show = false;
@@ -475,37 +514,6 @@ export default {
                     this.show = false;
                 })
         },
-        // cargarCliente(){
-        //     this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
-        //     this.media           = this.arrayCliente[0].Media;
-        //     this.lecturaAnterior = this.arrayCliente[0].LecturaAnterior;
-        //     this.nombreCliente   = this.arrayCliente[0].Nombre;
-        //     this.corte           = this.arrayCliente[0].Corte ? 'Sí' : 'No';
-        //     this.id              = this.arrayCliente[0].GeneracionFactura;
-        //     this.cli             = this.arrayCliente[0].Cliente;
-        //     this.medidor         = this.arrayCliente[0].Medidor;
-        //     this.lecturaActual   = this.arrayCliente[0].LecturaActual == "0" ? '' : this.arrayCliente[0].LecturaActual;
-        //     this.categoria       = this.arrayCliente[0].Categoria;
-        //     this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
-
-        //     if(this.arrayCliente[0].NombreTC != null){
-        //         this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
-        //         this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
-        //     }
-
-        //     if(this.arrayCliente[0].N2 != null){
-        //         this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
-        //         this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
-        //     }
-
-        //     if(this.medidor == 0)
-        //         this.conMedidor = false;
-        //     else
-        //         this.conMedidor = true;
-
-        //     this.show3 = false;
-        //     this.$bvModal.hide('modal-buscar');
-        // },
         cargarValoresNext(){
             this.codigoUbicacion = this.arrayCliente[0].CodigoUbicacion;
             this.media           = this.arrayCliente[0].Media;
@@ -522,11 +530,17 @@ export default {
             if(this.arrayCliente[0].NombreTC != null){
                 this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
                 this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+            }else{
+                this.anormalidad = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta = 0
             }
 
             if(this.arrayCliente[0].N2 != null){
                 this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
                 this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
+            }else{
+                this.anormalidad2 = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta2 = 0
             }
 
             if(this.medidor == 0)

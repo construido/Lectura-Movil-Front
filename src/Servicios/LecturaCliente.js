@@ -114,6 +114,7 @@ export default {
             cobro: '',
 
             switchCategorizar: false,
+            switchLecturaPendiente: false,
         }
     },
 
@@ -163,7 +164,7 @@ export default {
             this.switchCategorizar != this.switchCategorizar
             if(this.switchCategorizar){
                 this.axios.post('/admin/Categorizar', {
-                    'DataBaseAlias'       : this.DataBaseAlias
+                    'DataBaseAlias' : this.DataBaseAlias
                 })
                 .then(res => {
                     console.log(res.data)
@@ -184,6 +185,32 @@ export default {
                 this.show = false
             }
         },
+        lecturaPendiente(){
+            this.show = true
+            this.switchLecturaPendiente != this.switchLecturaPendiente
+            if(this.switchLecturaPendiente){
+                this.axios.post('/admin/LecturaPendiente', {
+                    'DataBaseAlias' : this.DataBaseAlias
+                })
+                .then(res => {
+                    console.log(res.data)
+                    this.anormalidad = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadPendiente;
+                    this.anormalidadCorrecta = res.data[0].AnormalidadPendiente;
+                    console.log(this.anormalidadCorrecta);
+                    this.show = false
+                })
+                .catch(e => {
+                    console.log(e.response)
+                    this.show = false
+                })
+            }else{
+                console.log(this.switchLecturaPendiente)
+                this.anormalidad = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta = 0
+                console.log(this.anormalidadCorrecta);
+                this.show = false
+            }
+        },
         modalCliente(){ // TODO: se le implemento la variable "dato" que recibe del formulario
             this.$bvModal.show('modal-buscar');
         },
@@ -199,11 +226,13 @@ export default {
                 if (res.data.status == 403){
                     SessionExpirada();
                 }else{
-                    this.arrayCliente = res.data.values;
+                    console.log(res.data.values.GeneracionLectura)
+                    this.arrayCliente = res.data.values.GeneracionLectura
                     if(this.arrayCliente.length > 0){
                         this.cargarCliente()
                         this.showMessage = false
-                        console.log(res.data)
+                        this.switchCategorizar = res.data.values.Categorizar
+                        this.switchLecturaPendiente = res.data.values.Pendiente
                     }else{
                         this.showMessage = true
                         this.show3 = false
@@ -392,19 +421,30 @@ export default {
 
             this.axios.post('/admin/DO_LecturarNormal', formData).then(res => {
                 if (res.data.values.Error == 2000 || this.conMedidor == false) {
-                    this.valido = 0;
-                    this.lecturaActual = '';
-                    this.anormalidad = 'Sin Anormalidad - - 0',
-                    this.anormalidad2 = 'Sin Anormalidad - - 0',  // TODO:
-                    this.anormalidadCorrecta = 0,
-                    this.anormalidadCorrecta2 = 0,  // TODO:
-                    this.$bvModal.show('modal-seguir');
+                    this.valido = 0
+                    this.lecturaActual = ''
+                    this.anormalidad = 'Sin Anormalidad - - 0'
+                    this.anormalidad2 = 'Sin Anormalidad - - 0'  // TODO:
+                    this.anormalidadCorrecta = 0
+                    this.anormalidadCorrecta2 = 0  // TODO:
+
+                    if(this.switchLecturaPendiente == true){
+                        this.$bvModal.hide('modal-seguir')
+                        this.show = false
+                        this.CancelarImpresion()
+                    }
+                    else{
+                        this.$bvModal.show('modal-seguir')
+                        this.show = false
+                    }
+                    
                     this.DatosFactura(this.id, this.cli);
                     this.lecturados = parseInt(this.lecturados) + 1;
                     let input = document.getElementById("file");
                     input.value = ''
-                    this.show = false
+                    // this.show = false
                     this.switchCategorizar = false
+                    this.switchLecturaPendiente = false
                 }else{
                     this.arrayErrores = res.data.values;
                     this.llenarCampoErrores();
@@ -459,6 +499,7 @@ export default {
                     if (res.data.status == 403){
                         SessionExpirada();
                     }else{
+                        console.log(res.data.values)
                         this.arrayCliente = res.data.values;
                         console.log(this.arrayCliente[0].CodigoUbicacion)
                         let cadena = this.arrayCliente[0].CodigoUbicacion
@@ -513,11 +554,17 @@ export default {
             if(this.arrayCliente[0].NombreTC != null){
                 this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
                 this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+            }else{
+                this.anormalidad = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta = 0
             }
 
             if(this.arrayCliente[0].N2 != null){
                 this.anormalidad2 = this.arrayCliente[0].NA2+' - '+this.arrayCliente[0].N2+' - '+this.arrayCliente[0].MedidorAnormalidad2; // 'Sin Anormalidad - - 0',
                 this.anormalidadCorrecta2 = this.arrayCliente[0].MedidorAnormalidad2;
+            }else{
+                this.anormalidad2 = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta2 = 0
             }
 
             if(this.medidor == 0)
@@ -541,6 +588,14 @@ export default {
             this.categoria       = this.arrayCliente[0].Categoria; // TODO: hacer seguimiento
             this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
 
+            if(this.arrayCliente[0].NombreTC != null){
+                this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+            }else{
+                this.anormalidad = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta = 0
+            }
+
             this.medidor         = this.arrayCliente[0].Medidor;
 
             if(this.medidor == 0)
@@ -559,6 +614,14 @@ export default {
             this.medidor         = this.arrayCliente[0].Medidor;
             this.categoria       = this.arrayCliente[0].Categoria;
             this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
+
+            if(this.arrayCliente[0].NombreTC != null){
+                this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
+                this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
+            }else{
+                this.anormalidad = 'Sin Anormalidad - - 0'
+                this.anormalidadCorrecta = 0
+            }
 
             if(this.medidor == 0)
                 this.conMedidor = false;
