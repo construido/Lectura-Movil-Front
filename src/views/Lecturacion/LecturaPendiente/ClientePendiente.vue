@@ -52,6 +52,11 @@
                                                 <label class="form-check-label" for="inlineCheckbox1"> <b> Lectura Pendiente </b> </label>
                                                 <input class="form-check-input" type="checkbox" v-model="switchLecturaPendiente" @change="lecturaPendiente()">
                                             </div>
+                                            <div class="form-floating my-2">
+                                                <input type="text" :class="[glosa == '' ? 'form-control is-invalid' : 'form-control']" placeholder="Glosa" v-model="glosa">
+                                                <label>Glosa:</label>
+                                                <span v-if="glosa == ''" v-text="'Campo obligatorio'" class="text-danger"></span>
+                                            </div>
                                         </b-tab>
                                         <b-tab title="Anormalidad 2">
                                             <b-card-text>
@@ -225,7 +230,7 @@
             <h5 class="text-black"> Planilla terminada..! </h5>
 
             <template #modal-footer="{ cancel }">
-                <b-button block variant="outline-success" @click="$router.go(-2)">
+                <b-button block variant="outline-success" @click="$router.go(-1)">
                     Aceptar
                 </b-button>
 

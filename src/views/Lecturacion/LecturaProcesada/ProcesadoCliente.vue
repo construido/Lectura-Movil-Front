@@ -2,7 +2,7 @@
     <div id="app">
         <NavBar></NavBar>
         
-        <div class="container my-2" style="overflow: auto;">
+        <div class="container my-2 mb-5" style="overflow: auto;">
             <div class="card">
                 <div class="card-header">
                     <div class="col-xl-6">
@@ -52,6 +52,11 @@
                                                 <label class="form-check-label" for="inlineCheckbox1"> <b> Lectura Pendiente </b> </label>
                                                 <input class="form-check-input" type="checkbox" v-model="switchLecturaPendiente" @change="lecturaPendiente()">
                                             </div>
+                                            <div class="form-floating my-2">
+                                                <input type="text" :class="[glosa == '' ? 'form-control is-invalid' : 'form-control']" placeholder="Glosa" v-model="glosa">
+                                                <label>Glosa:</label>
+                                                <span v-if="glosa == ''" v-text="'Campo obligatorio'" class="text-danger"></span>
+                                            </div>
                                         </b-tab>
                                         <b-tab title="Anormalidad 2">
                                             <b-card-text>
@@ -84,13 +89,66 @@
                         </div>
                         <!-- PARA OBTENER LAS IMAGENES -- FIN -->
 
+                        <div v-if="arrayFotos.length > 0" class="form-group col-12">
+                            <hr>
+                        </div>
+
+                        <div v-if="arrayFotos.length > 0" class="text-center">
+                            <div class="d-grid gap-2">
+                                <b-button variant="secondary" @click="modalFotos()"> Ver Fotos </b-button>
+                            </div>
+                        </div>
+
                     </div>
                 </b-overlay>
             </div>
-        
         </div>
-        <!-- <br>
-        <br><br><br><br> -->
+        <br>
+        <!-- <br><br><br><br> -->
+
+        <b-modal centered id="modal-foto">
+            <template #modal-header="{ close }">
+                <b-button hidden variant="outline-danger" @click="close()">
+                    Cerrar
+                </b-button>
+
+                <h5 class="text-success"> Fotos del Cliente: {{ cli }} </h5>
+            </template>
+
+            <!-- <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div v-for="(item, index) in arrayFotos" :key="index" class="carousel-item active">
+                        <img :src="item" class="figure-img img-fluid rounded" alt="...">
+                        <b-img :src="item" fluid alt="Responsive image"></b-img>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button> controls indicators 
+            </div> -->
+
+            <b-carousel id="carousel-1" v-model="slide" controls :interval="5000" 
+            style="height: auto;" label-next="" label-prev="" no-animation>
+                <div v-for="(item, index) in arrayFotos" :key="index">
+                    <b-carousel-slide>
+                        <template #img>
+                            <img class="d-block img-fluid w-100 rounded" style="height: 200px;" :src="item" alt="image slot">
+                        </template>
+                    </b-carousel-slide>
+                </div>
+            </b-carousel>
+
+            <template #modal-footer="{ cancel }">
+                <b-button block variant="outline-success" @click="cancel()">
+                    Aceptar
+                </b-button>
+            </template>
+        </b-modal>
 
         <b-modal centered id="modal-scoped">
             <template #modal-header="{ close }">

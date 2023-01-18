@@ -6,12 +6,17 @@ export default {
 
     data() {
         return {
+            // TODO
+            slide: 0,
+            glosa: '',
+            arrayFotos: [],
+            
             // Buscar Cliente
-            tipoC: 'Ubicacion',
             dato: '',
-            objetoCliente: '',
             zona: '',
             ruta: '',
+            tipoC: 'Ubicacion',
+            objetoCliente: '',
             showMessage: false,
             messageCliente: 'Cliente no encontrado',
 
@@ -123,6 +128,7 @@ export default {
         this.obtenerCliente(this.id, this.cli, this.DataBaseAlias);
         // this.obtenerUbicacion();
         this.listarAnormalidad(1);
+        this.imageAllClient()
     },
 
     computed: {
@@ -153,6 +159,23 @@ export default {
     },
 
     methods: {
+        modalFotos(){
+            this.$bvModal.show('modal-foto')
+        },
+        imageAllClient(){
+            this.axios.post('/admin/imagenAllClient', {
+                "Cliente"           : this.cli,
+                "DataBaseAlias"     : this.DataBaseAlias,
+                "GeneracionFactura" : this.id
+            })
+            .then(res => {
+                console.log(res.data[0])
+                this.arrayFotos = res.data
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
         categorizar(){
             this.show = true
             this.switchCategorizar != this.switchCategorizar
@@ -373,68 +396,74 @@ export default {
         },
         guardarLectura(){
             this.show = true;
-            let indice = this.imageEnviar.length;
-            let formData = new FormData();
+            if(this.glosa != ''){
+                let indice = this.imageEnviar.length;
+                let formData = new FormData();
 
-            for (let index = 0; index < indice; index++){
-                formData.append('imageEnviar[]', this.imageEnviar[index]);
-            }
-            
-            formData.append('tnCliente', this.cli);
-            formData.append('tnMedia', this.media);
-            formData.append('Latitud', this.coor.lat);
-            formData.append('Longitud', this.coor.lng);
-            formData.append('tnMedidor', this.medidor);
-            formData.append('tnPlomero', this.Plomero);
-            formData.append('tnCategoria', this.categoria);
-            formData.append('tnGeneracionFactura', this.id);
-            formData.append('DataBaseAlias', this.DataBaseAlias);
-            formData.append('EmpresaNombre', this.EmpresaNombre);
-            formData.append('tnLecturaActual', this.lecturaActual);
-            formData.append('llNuevaLectura', this.llNuevaLectura);
-            formData.append('tnCobro', this.arrayCliente[0].Cobro);
-            formData.append('tnLecturaAnterior', this.lecturaAnterior);
-            formData.append('tnMedidorAnormalidad', this.anormalidadCorrecta);
-            formData.append('tnMedidorAnormalidad2', this.anormalidadCorrecta2); // TODO:
-            formData.append('tnCodigoUbicacion', this.arrayCliente[0].CodigoUbicacion);
-
-            this.axios.post('/admin/DO_LecturarNormal', formData).then(res => {
-                console.log(res.data);
-
-                if (res.data.values.Error == 2000 || this.conMedidor == false) {
-                    this.valido = 0
-                    this.lecturaActual = ''
-                    this.anormalidad = 'Sin Anormalidad - - 0'
-                    this.anormalidad2 = 'Sin Anormalidad - - 0'  // TODO:
-                    this.anormalidadCorrecta = 0
-                    this.anormalidadCorrecta2 = 0  // TODO:
-
-                    if(this.switchLecturaPendiente == true){
-                        this.$bvModal.hide('modal-seguir')
-                        this.show = false
-                        this.CancelarImpresion()
-                    }
-                    else{
-                        this.$bvModal.show('modal-seguir')
-                        this.show = false
-                    }
-
-                    this.DatosFactura(this.id, this.cli)
-                    let input = document.getElementById("file")
-                    input.value = ''
-                    this.switchCategorizar = false
-                    this.switchLecturaPendiente = false
-                }else{
-                    this.arrayErrores = res.data.values;
-                    this.llenarCampoErrores();
-                    this.show = false;
-                    this.$bvModal.show('modal-scoped');
+                for (let index = 0; index < indice; index++){
+                    formData.append('imageEnviar[]', this.imageEnviar[index]);
                 }
-
-            }).catch(e => {
-                console.log(e.response);
-                // this.camposObligatorios = this.controlErrores(e);
-            })
+                
+                formData.append('tnCliente', this.cli);
+                formData.append('tnGlosa', this.glosa);
+                formData.append('tnMedia', this.media);
+                formData.append('Latitud', this.coor.lat);
+                formData.append('Longitud', this.coor.lng);
+                formData.append('tnMedidor', this.medidor);
+                formData.append('tnPlomero', this.Plomero);
+                formData.append('tnCategoria', this.categoria);
+                formData.append('tnGeneracionFactura', this.id);
+                formData.append('DataBaseAlias', this.DataBaseAlias);
+                formData.append('EmpresaNombre', this.EmpresaNombre);
+                formData.append('tnLecturaActual', this.lecturaActual);
+                formData.append('llNuevaLectura', this.llNuevaLectura);
+                formData.append('tnCobro', this.arrayCliente[0].Cobro);
+                formData.append('tnLecturaAnterior', this.lecturaAnterior);
+                formData.append('tnMedidorAnormalidad', this.anormalidadCorrecta);
+                formData.append('tnMedidorAnormalidad2', this.anormalidadCorrecta2); // TODO:
+                formData.append('tnCodigoUbicacion', this.arrayCliente[0].CodigoUbicacion);
+    
+                this.axios.post('/admin/DO_LecturarNormal', formData).then(res => {
+                    console.log(res.data);
+    
+                    if (res.data.values.Error == 2000 || this.conMedidor == false) {
+                        this.valido = 0
+                        this.glosa = ''
+                        this.lecturaActual = ''
+                        this.anormalidad = 'Sin Anormalidad - - 0'
+                        this.anormalidad2 = 'Sin Anormalidad - - 0'  // TODO:
+                        this.anormalidadCorrecta = 0
+                        this.anormalidadCorrecta2 = 0  // TODO:
+    
+                        if(this.switchLecturaPendiente == true){
+                            this.$bvModal.hide('modal-seguir')
+                            this.show = false
+                            this.CancelarImpresion()
+                        }
+                        else{
+                            this.$bvModal.show('modal-seguir')
+                            this.show = false
+                        }
+    
+                        this.DatosFactura(this.id, this.cli)
+                        let input = document.getElementById("file")
+                        input.value = ''
+                        this.switchCategorizar = false
+                        this.switchLecturaPendiente = false
+                    }else{
+                        this.arrayErrores = res.data.values;
+                        this.llenarCampoErrores();
+                        this.show = false;
+                        this.$bvModal.show('modal-scoped');
+                    }
+    
+                }).catch(e => {
+                    console.log(e.response);
+                    // this.camposObligatorios = this.controlErrores(e);
+                })
+            }else{
+                this.show = false
+            }
         },
         obtenerUbicacion() {
             if("geolocation" in navigator){
@@ -495,13 +524,14 @@ export default {
             this.show = true;
             this.axios.post('/admin/verLecturaIdNextProcesada?tcGeneracionFactura='+id+'&DataBaseAlias='+DataBaseAlias+'&CodigoUbicacion='+this.codigoUbicacion)
                 .then(res => {
+                    console.log(res.data.values)
                     if (res.data.status == 403){
                         SessionExpirada();
                     }else{
-                        if (res.data.values.length == 0) {
+                        if (res.data.values.GeneracionLectura.length == 0) {
                             this.$bvModal.show('modal-sin-cliente');
                         }else{
-                            this.arrayCliente = res.data.values;
+                            this.arrayCliente = res.data.values.GeneracionLectura
                             this.switchCategorizar = res.data.values.Categorizar
                             this.switchLecturaPendiente = res.data.values.Pendiente
                             this.cargarValoresNext();
@@ -510,7 +540,7 @@ export default {
                     }
                 })
                 .catch(e => {
-                    console.log(e.response);
+                    console.log(e);
                     this.show = false;
                 })
         },
