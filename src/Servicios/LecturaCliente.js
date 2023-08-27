@@ -6,6 +6,10 @@ export default {
 
     data() {
         return {
+            numeroSerie: null,  // TODO: implementado el 12/08/2023
+            regla: null, // TODO: implementado el 30/07/2023
+            exigirFoto: null, // TODO: implementado el 30/07/2023
+
             // Buscar Cliente
             tipoC: 'Ubicacion',
             dato: '',
@@ -128,6 +132,7 @@ export default {
         this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
         this.obtenerCliente(this.id, this.cli, this.DataBaseAlias);
         // this.obtenerUbicacion();
+        this.buscarParametroExigirFoto()
         this.listarAnormalidad(1);
     },
 
@@ -159,6 +164,16 @@ export default {
     },
 
     methods: {
+        buscarParametroExigirFoto(){ // TODO: implementado el 30/07/2023
+            this.axios.get('/admin/parametroLectura?DataBaseAlias='+this.DataBaseAlias)
+            .then(res => {
+                console.log(res.data)
+                this.exigirFoto = res.data[0].ExigirFotoAplicarPromedio
+            })
+            .catch(e => {
+                console.log(e)
+            })
+        },
         categorizar(){
             this.show = true
             this.switchCategorizar != this.switchCategorizar
@@ -290,7 +305,8 @@ export default {
             if(this.anormalidadSelect == 1){
                 this.anormalidad = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
                 this.anormalidadCorrecta = objeto.MedidorAnormalidad;
-                console.log(this.anormalidadCorrecta);
+                this.regla = objeto.Regla; // TODO: implementado el 30/07/2023
+                console.log(this.regla);
             }else{
                 this.anormalidad2 = objeto.NombreAnormalidad + ' - ' + nombre + ' - ' + objeto.MedidorAnormalidad;
                 this.anormalidadCorrecta2 = objeto.MedidorAnormalidad;
@@ -392,69 +408,89 @@ export default {
             this.TipoConsumoE          = this.arrayErrores.TipoConsumo;
             this.FinMedidorE           = this.arrayErrores.FinMedidor;
         },
+        verificarRegla(){ // TODO: implementado el 30/07/2023
+            let verificar = true
+            if(this.regla == 4){
+                if(this.exigirFoto == 1){
+                    if(this.imageEnviar.length <= 0){
+                        verificar = false
+                    }
+                }
+            }
+
+            return verificar
+        },
         guardarLectura(){
             this.show = true;
-            let indice = this.imageEnviar.length;
-            let formData = new FormData();
 
-            for (let index = 0; index < indice; index++){
-                formData.append('imageEnviar[]', this.imageEnviar[index]);
+            if(this.verificarRegla()){ // TODO: implementado el 30/07/2023
+                let indice = this.imageEnviar.length;
+                let formData = new FormData();
+    
+                for (let index = 0; index < indice; index++){
+                    formData.append('imageEnviar[]', this.imageEnviar[index]);
+                }
+                
+                formData.append('tnCliente', this.cli);
+                formData.append('tnMedia', this.media);
+                formData.append('Latitud', this.coor.lat);
+                formData.append('Longitud', this.coor.lng);
+                formData.append('tnMedidor', this.medidor);
+                formData.append('tnPlomero', this.Plomero);
+                formData.append('tnCategoria', this.categoria);
+                formData.append('tnGeneracionFactura', this.id);
+                formData.append('DataBaseAlias', this.DataBaseAlias);
+                formData.append('EmpresaNombre', this.EmpresaNombre);
+                formData.append('tnLecturaActual', this.lecturaActual);
+                formData.append('llNuevaLectura', this.llNuevaLectura);
+                formData.append('tnCobro', this.arrayCliente[0].Cobro);
+                formData.append('tnLecturaAnterior', this.lecturaAnterior);
+                formData.append('tnMedidorAnormalidad', this.anormalidadCorrecta);
+                formData.append('tnMedidorAnormalidad2', this.anormalidadCorrecta2); // TODO:
+                formData.append('tnCodigoUbicacion', this.arrayCliente[0].CodigoUbicacion);
+    
+                this.axios.post('/admin/DO_LecturarNormal', formData).then(res => {
+                    if (res.data.values.Error == 2000 || this.conMedidor == false) {
+                        this.valido = 0
+                        this.regla = null
+                        this.lecturaActual = ''
+                        this.anormalidad = 'Sin Anormalidad - - 0'
+                        this.anormalidad2 = 'Sin Anormalidad - - 0'  // TODO:
+                        this.anormalidadCorrecta = 0
+                        this.anormalidadCorrecta2 = 0  // TODO:
+    
+                        if(this.switchLecturaPendiente == true){
+                            this.$bvModal.hide('modal-seguir')
+                            this.show = false
+                            this.CancelarImpresion()
+                        }
+                        else{
+                            this.$bvModal.show('modal-seguir')
+                            this.show = false
+                        }
+                        
+                        this.DatosFactura(this.id, this.cli);
+                        this.lecturados = parseInt(this.lecturados) + 1;
+                        let input = document.getElementById("file");
+                        input.value = ''
+                        // this.show = false
+                        this.switchCategorizar = false
+                        this.switchLecturaPendiente = false
+                    }else{
+                        this.arrayErrores = res.data.values;
+                        this.llenarCampoErrores();
+                        this.show = false;
+                        this.$bvModal.show('modal-scoped');
+                    }
+                }).catch(e => {
+                    console.log(e)
+                    this.show = false;
+                })
+            }else{
+                this.show = false;
+                this.$bvModal.show('modal-error');
             }
             
-            formData.append('tnCliente', this.cli);
-            formData.append('tnMedia', this.media);
-            formData.append('Latitud', this.coor.lat);
-            formData.append('Longitud', this.coor.lng);
-            formData.append('tnMedidor', this.medidor);
-            formData.append('tnPlomero', this.Plomero);
-            formData.append('tnCategoria', this.categoria);
-            formData.append('tnGeneracionFactura', this.id);
-            formData.append('DataBaseAlias', this.DataBaseAlias);
-            formData.append('EmpresaNombre', this.EmpresaNombre);
-            formData.append('tnLecturaActual', this.lecturaActual);
-            formData.append('llNuevaLectura', this.llNuevaLectura);
-            formData.append('tnCobro', this.arrayCliente[0].Cobro);
-            formData.append('tnLecturaAnterior', this.lecturaAnterior);
-            formData.append('tnMedidorAnormalidad', this.anormalidadCorrecta);
-            formData.append('tnMedidorAnormalidad2', this.anormalidadCorrecta2); // TODO:
-            formData.append('tnCodigoUbicacion', this.arrayCliente[0].CodigoUbicacion);
-
-            this.axios.post('/admin/DO_LecturarNormal', formData).then(res => {
-                if (res.data.values.Error == 2000 || this.conMedidor == false) {
-                    this.valido = 0
-                    this.lecturaActual = ''
-                    this.anormalidad = 'Sin Anormalidad - - 0'
-                    this.anormalidad2 = 'Sin Anormalidad - - 0'  // TODO:
-                    this.anormalidadCorrecta = 0
-                    this.anormalidadCorrecta2 = 0  // TODO:
-
-                    if(this.switchLecturaPendiente == true){
-                        this.$bvModal.hide('modal-seguir')
-                        this.show = false
-                        this.CancelarImpresion()
-                    }
-                    else{
-                        this.$bvModal.show('modal-seguir')
-                        this.show = false
-                    }
-                    
-                    this.DatosFactura(this.id, this.cli);
-                    this.lecturados = parseInt(this.lecturados) + 1;
-                    let input = document.getElementById("file");
-                    input.value = ''
-                    // this.show = false
-                    this.switchCategorizar = false
-                    this.switchLecturaPendiente = false
-                }else{
-                    this.arrayErrores = res.data.values;
-                    this.llenarCampoErrores();
-                    this.show = false;
-                    this.$bvModal.show('modal-scoped');
-                }
-            }).catch(e => {
-                console.log(e)
-                this.show = false;
-            })
         },
         obtenerUbicacion() {
             if("geolocation" in navigator){
@@ -482,6 +518,7 @@ export default {
             this.animations = 'spin-pulse';
             this.axios.post('/admin/llenarSelectAnormalidad?page='+page+'&tcDataBaseAlias='+this.DataBaseAlias+'&tcOrden='+this.orden+'&tcTipo='+this.tipo+'&tcDato='+this.dato)
                 .then(res => {
+                    console.log(res.data); // TODO: borrar luego
                     this.pagination = res.data.values.pagination;
                     this.arrayAnormalidades = res.data.values.laMedidorAnormalidad.data;
                     this.mostrar = !this.mostrar;
@@ -588,6 +625,12 @@ export default {
             this.categoria       = this.arrayCliente[0].Categoria; // TODO: hacer seguimiento
             this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
 
+            if(this.arrayCliente[0].NumeroSerie && this.arrayCliente[0].Numero){
+                this.numeroSerie = this.arrayCliente[0].NumeroSerie + ' - ' + this.arrayCliente[0].Numero
+            } else {
+                this.numeroSerie = 'Sin Medidor'
+            }
+
             if(this.arrayCliente[0].NombreTC != null){
                 this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',
                 this.anormalidadCorrecta = this.arrayCliente[0].MedidorAnormalidad;
@@ -614,6 +657,12 @@ export default {
             this.medidor         = this.arrayCliente[0].Medidor;
             this.categoria       = this.arrayCliente[0].Categoria;
             this.NombreCategoria = this.arrayCliente[0].NombreCategoria;
+
+            if(this.arrayCliente[0].NumeroSerie && this.arrayCliente[0].Numero){
+                this.numeroSerie = this.arrayCliente[0].NumeroSerie + ' - ' + this.arrayCliente[0].Numero
+            } else {
+                this.numeroSerie = 'Sin Medidor'
+            }
 
             if(this.arrayCliente[0].NombreTC != null){
                 this.anormalidad = this.arrayCliente[0].NombreAnormalidad+' - '+this.arrayCliente[0].NombreTC+' - '+this.arrayCliente[0].MedidorAnormalidad; // 'Sin Anormalidad - - 0',

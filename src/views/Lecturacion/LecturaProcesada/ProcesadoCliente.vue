@@ -16,9 +16,9 @@
                 </div>
                 <b-overlay :show="show" class="d-inline-block">
                     <div class="card-body">
-                        <b> Código Ubicación: </b> {{ codigoUbicacion }} <br>
+                        <b> Código Ubicación: </b> {{ codigoUbicacion }} <label class="mx-4"> <b> Corte: </b> {{corte}} </label> <br>
                         <b> Nombre: </b> {{ nombreCliente }} <br>
-                        <b> Media: </b> {{ Math.ceil(media) }} <label class="mx-4"> <b> Corte: </b> {{corte}} </label> <br>
+                        <b> Media: </b> {{ Math.ceil(media) }} <label class="mx-4"> <b> Medidor: </b> {{numeroSerie}} </label> <br>
                         <b> Categoria: </b> {{ NombreCategoria }}
 
                         <div class="form-check form-check-inline form-switch mx-0">
@@ -145,6 +145,24 @@
 
             <template #modal-footer="{ cancel }">
                 <b-button block variant="outline-success" @click="cancel()">
+                    Aceptar
+                </b-button>
+            </template>
+        </b-modal>
+
+        <!-- implementado el 30/07/2023 -->
+        <b-modal centered id="modal-error">
+            <template #modal-header="{ close }">
+                <b-button hidden variant="outline-danger" @click="close()">
+                    Cerrar
+                </b-button>
+                <h5 class="text-danger">Error</h5>
+            </template>
+            
+            <h5> Debe enviar al menos una Fotografía </h5>
+
+            <template #modal-footer="{ ok }">
+                <b-button block variant="outline-success" @click="ok()">
                     Aceptar
                 </b-button>
             </template>
