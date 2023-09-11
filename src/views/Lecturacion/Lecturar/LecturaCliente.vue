@@ -45,12 +45,12 @@
                                             <b-card-text>
                                                 <b-input-group class="my-sm-0">
                                                     <b-form-input readonly type="text" placeholder="CodUbi - Cliente - Nombre" v-model="anormalidad"></b-form-input>
-                                                    <b-button @click="modalAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
+                                                    <b-button :disabled="deshabilitarBoton" @click="modalAnormalidad(1)" variant="primary"><b-icon icon="search"></b-icon></b-button>
                                                 </b-input-group>
                                             </b-card-text>
                                             <div class="form-check form-check-inline form-switch my-0">
                                                 <label class="form-check-label" for="inlineCheckbox1"> <b> Lectura Pendiente </b> </label>
-                                                <input class="form-check-input" type="checkbox" v-model="switchLecturaPendiente" @change="lecturaPendiente()">
+                                                <input :disabled="deshabilitarBoton" class="form-check-input" type="checkbox" v-model="switchLecturaPendiente" @change="lecturaPendiente()">
                                             </div>
                                         </b-tab>
                                         <b-tab title="Anormalidad 2">

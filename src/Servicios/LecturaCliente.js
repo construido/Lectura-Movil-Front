@@ -6,6 +6,11 @@ export default {
 
     data() {
         return {
+            deshabilitarBoton: false, // 2/9/2023 IMPLEMENTADO POR ELOY
+            AnormalidadNueva: null, // 2/9/2023 IMPLEMENTADO POR ELOY
+            AnormalidadMedidor: null, // 2/9/2023 IMPLEMENTADO POR ELOY
+            AnormalidadBajaTemporal: null, // 2/9/2023 IMPLEMENTADO POR ELOY
+
             numeroSerie: null,  // TODO: implementado el 12/08/2023
             regla: null, // TODO: implementado el 30/07/2023
             exigirFoto: null, // TODO: implementado el 30/07/2023
@@ -129,10 +134,10 @@ export default {
     created(){
         this.id = this.$route.params.GeneracionFactura;
         this.cli = this.$route.params.Cliente;
+        this.buscarParametroExigirFoto()
         this.lecturasPendientesLecturados(this.id, this.DataBaseAlias);
         this.obtenerCliente(this.id, this.cli, this.DataBaseAlias);
         // this.obtenerUbicacion();
-        this.buscarParametroExigirFoto()
         this.listarAnormalidad(1);
     },
 
@@ -163,12 +168,25 @@ export default {
         }
     },
 
-    methods: {
+    methods: {        
+        verificarAnormalidadEspecial(anormalidad){
+            if(anormalidad > 0){
+                if(anormalidad == this.AnormalidadNueva || anormalidad == this.AnormalidadMedidor || anormalidad == this.AnormalidadBajaTemporal) this.deshabilitarBoton = true
+                else this.deshabilitarBoton = false
+            }else {
+                this.deshabilitarBoton = false
+            }
+
+            console.log(this.deshabilitarBoton)
+        },
         buscarParametroExigirFoto(){ // TODO: implementado el 30/07/2023
             this.axios.get('/admin/parametroLectura?DataBaseAlias='+this.DataBaseAlias)
             .then(res => {
                 console.log(res.data)
                 this.exigirFoto = res.data[0].ExigirFotoAplicarPromedio
+                this.AnormalidadNueva = res.data[0].AnormalidadNuevo
+                this.AnormalidadMedidor = res.data[0].AnormalidadCambioMedidor
+                this.AnormalidadBajaTemporal = res.data[0].AnormalidadRegularizacionBajaTemporal
             })
             .catch(e => {
                 console.log(e)
@@ -256,6 +274,7 @@ export default {
             })
             .catch(e => {
                 console.log(e.response)
+                this.show3 = false
             })
         },
         habilitarImpresora(){
@@ -610,6 +629,7 @@ export default {
                 this.conMedidor = true;
 
             this.show3 = false;
+            this.verificarAnormalidadEspecial(this.anormalidadCorrecta)
             this.$bvModal.hide('modal-buscar');
         },
         cargarValoresNext(){
@@ -646,6 +666,7 @@ export default {
             else
                 this.conMedidor = true;
 
+            this.verificarAnormalidadEspecial(this.anormalidadCorrecta)
             this.show            = false;
         },
         cargarValores(){
@@ -676,7 +697,8 @@ export default {
                 this.conMedidor = false;
             else
                 this.conMedidor = true;
-
+            
+            this.verificarAnormalidadEspecial(this.anormalidadCorrecta)
             this.show = false;
         },
     },
