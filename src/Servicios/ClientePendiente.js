@@ -200,9 +200,13 @@ export default {
                 })
                 .then(res => {
                     console.log(res.data)
-                    this.anormalidad2 = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadVerificarCategoria;
-                    this.anormalidadCorrecta2 = res.data[0].AnormalidadVerificarCategoria;
-                    console.log(this.anormalidadCorrecta2);
+                    if(res.data.length > 0){
+                        this.anormalidad2 = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadVerificarCategoria
+                        this.anormalidadCorrecta2 = res.data[0].AnormalidadVerificarCategoria
+                    } else {
+                        this.switchCategorizar = false
+                    }
+
                     this.show = false
                 })
                 .catch(e => {
@@ -210,10 +214,8 @@ export default {
                     this.show = false
                 })
             }else{
-                console.log(this.switchCategorizar)
                 this.anormalidad2 = 'Sin Anormalidad - - 0'
                 this.anormalidadCorrecta2 = 0
-                console.log(this.anormalidadCorrecta2);
                 this.show = false
             }
         },
@@ -226,9 +228,13 @@ export default {
                 })
                 .then(res => {
                     console.log(res.data)
-                    this.anormalidad = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadPendiente;
-                    this.anormalidadCorrecta = res.data[0].AnormalidadPendiente;
-                    console.log(this.anormalidadCorrecta);
+                    if(res.data.length > 0){
+                        this.anormalidad = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadPendiente
+                        this.anormalidadCorrecta = res.data[0].AnormalidadPendiente
+                    } else {
+                        this.switchLecturaPendiente = false
+                    }
+
                     this.show = false
                 })
                 .catch(e => {
@@ -236,10 +242,8 @@ export default {
                     this.show = false
                 })
             }else{
-                console.log(this.switchLecturaPendiente)
                 this.anormalidad = 'Sin Anormalidad - - 0'
                 this.anormalidadCorrecta = 0
-                console.log(this.anormalidadCorrecta);
                 this.show = false
             }
         },

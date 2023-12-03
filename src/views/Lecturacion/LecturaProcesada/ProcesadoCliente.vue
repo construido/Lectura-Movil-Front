@@ -16,15 +16,24 @@
                 </div>
                 <b-overlay :show="show" class="d-inline-block">
                     <div class="card-body">
-                        <b> Código Ubicación: </b> {{ codigoUbicacion }} <label class="mx-4"> <b> Corte: </b> {{corte}} </label> <br>
-                        <b> Nombre: </b> {{ nombreCliente }} <br>
-                        <b> Media: </b> {{ Math.ceil(media) }} <label class="mx-4"> <b> Medidor: </b> {{numeroSerie}} </label> <br>
-                        <b> Categoria: </b> {{ NombreCategoria }}
-
-                        <div class="form-check form-check-inline form-switch mx-0">
-                            <label class="form-check-label" for="inlineCheckbox1"> <b> Categorizar </b> </label>
-                            <input class="form-check-input" type="checkbox" v-model="switchCategorizar" @change="categorizar()">
+                        <div>
+                            <span style="float: left;"> <b> Código Ubicación: </b> {{ codigoUbicacion }} </span>
+                            <span style="float: right"> <b> Corte: </b> {{corte}} </span> <br>
                         </div>
+                        <b> Nombre: </b> {{ nombreCliente }} <br>
+                        <div>
+                            <span style="float: left;"> <b> Media: </b> {{ Math.ceil(media) }} </span>
+                            <span style="float: right;"> <b> Medidor: </b> {{numeroSerie}} </span> <br>
+                        </div>
+                        <div>
+                            <span style="float: left;"> <b> Categoria: </b> {{ NombreCategoria }} </span>
+                            <span style="float: right;">
+                                <div class="form-check form-check-inline form-switch mx-0">
+                                    <label class="form-check-label" for="inlineCheckbox1"> <b> Categorizar </b> </label>
+                                    <input class="form-check-input" type="checkbox" v-model="switchCategorizar" @change="categorizar()">
+                                </div>
+                            </span>
+                        </div> <br>
 
                         <div v-if="conMedidor == true">
                             <div class="form-floating">

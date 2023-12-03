@@ -203,7 +203,6 @@ export default {
                 "GeneracionFactura" : this.id
             })
             .then(res => {
-                console.log(res.data[0])
                 this.arrayFotos = res.data
             })
             .catch(err => {
@@ -219,9 +218,13 @@ export default {
                 })
                 .then(res => {
                     console.log(res.data)
-                    this.anormalidad2 = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadVerificarCategoria;
-                    this.anormalidadCorrecta2 = res.data[0].AnormalidadVerificarCategoria;
-                    console.log(this.anormalidadCorrecta2);
+                    if(res.data.length > 0){
+                        this.anormalidad2 = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadVerificarCategoria
+                        this.anormalidadCorrecta2 = res.data[0].AnormalidadVerificarCategoria                        
+                    } else {
+                        this.switchCategorizar = false
+                    }
+
                     this.show = false
                 })
                 .catch(e => {
@@ -229,10 +232,8 @@ export default {
                     this.show = false
                 })
             }else{
-                console.log(this.switchCategorizar)
                 this.anormalidad2 = 'Sin Anormalidad - - 0'
                 this.anormalidadCorrecta2 = 0
-                console.log(this.anormalidadCorrecta2);
                 this.show = false
             }
         },
@@ -245,9 +246,13 @@ export default {
                 })
                 .then(res => {
                     console.log(res.data)
-                    this.anormalidad = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadPendiente;
-                    this.anormalidadCorrecta = res.data[0].AnormalidadPendiente;
-                    console.log(this.anormalidadCorrecta);
+                    if(res.data.length > 0) {
+                        this.anormalidad = res.data[0].NombreAnormalidad + ' - ' + res.data[0].Nombre + ' - ' + res.data[0].AnormalidadPendiente
+                        this.anormalidadCorrecta = res.data[0].AnormalidadPendiente
+                    } else {
+                        this.switchLecturaPendiente = false
+                    }
+
                     this.show = false
                 })
                 .catch(e => {
@@ -255,10 +260,8 @@ export default {
                     this.show = false
                 })
             }else{
-                console.log(this.switchLecturaPendiente)
                 this.anormalidad = 'Sin Anormalidad - - 0'
                 this.anormalidadCorrecta = 0
-                console.log(this.anormalidadCorrecta);
                 this.show = false
             }
         },
@@ -274,6 +277,7 @@ export default {
                 'DataBaseAlias'       : this.DataBaseAlias
             })
             .then(res => {
+                console.log(res.data)
                 if (res.data.status == 403){
                     SessionExpirada();
                 }else{
@@ -555,6 +559,7 @@ export default {
         obtenerCliente(id, cli, DataBaseAlias){
             this.axios.post('/admin/verLecturaIdProcesada?tcGeneracionFactura='+id+'&tcCliente='+cli+'&DataBaseAlias='+DataBaseAlias)
                 .then(res => {
+                    console.log(res.data)
                     if (res.data.status == 403){
                         SessionExpirada();
                     }else{
